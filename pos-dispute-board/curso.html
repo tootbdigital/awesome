@@ -1,391 +1,499 @@
 <title>Pós em Administração Contratual</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: painel de estudo em coluna única. Cabeçalho com plano e progresso, filtros, módulos com linhas de recurso (check | título | abrir), fixação e anotações por módulo. */
+/* Conceito: planta de obra. Hero em azul de projeto com malha, painel de aulas em cartões, aula em roteiro numerado. Amarelo de sinalização só em ações e destaques. */
 :root{
-  --bg:#F1F4F7; --surface:#FFFFFF; --fg:#14202B; --muted:#566676; --line:#D3DBE3;
-  --accent:#B83A08; --on-accent:#FFFFFF; --ok:#1F7A4D; --warn:#9A5B00; --chip:#E6ECF1;
-  --f-display:'Archivo','Helvetica Neue',Arial,sans-serif;
-  --f-body:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --bg:#E9EDF1; --surface:#FFFFFF; --fg:#0B1F33; --muted:#52667A; --line:#CBD5DF; --chip:#DDE4EB;
+  --accent:#FFC20E; --on-accent:#0B1F33; --link:#0B4F8A; --ok:#15803D; --warn:#B45309;
+  --hero:#0B2540; --hero-fg:#F2F6FA; --hero-muted:#9FB4C8; --grid:rgba(255,255,255,.07);
+  --f-display:'Bricolage Grotesque','Helvetica Neue',Arial,sans-serif;
+  --f-body:'Instrument Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
   --f-mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#0D1721; --surface:#142230; --fg:#E7EDF2; --muted:#93A4B3; --line:#263747;
-    --accent:#FF8F52; --on-accent:#0D1721; --ok:#5FD39A; --warn:#F2B84B; --chip:#1D2F40; color-scheme:dark;
+    --bg:#08121D; --surface:#0F2033; --fg:#E8EEF4; --muted:#8FA3B5; --line:#203449; --chip:#17304A;
+    --link:#7DBCF5; --ok:#4ADE80; --warn:#F5B454; --hero:#0D2A47; color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#0D1721; --surface:#142230; --fg:#E7EDF2; --muted:#93A4B3; --line:#263747;
-  --accent:#FF8F52; --on-accent:#0D1721; --ok:#5FD39A; --warn:#F2B84B; --chip:#1D2F40; color-scheme:dark;
+  --bg:#08121D; --surface:#0F2033; --fg:#E8EEF4; --muted:#8FA3B5; --line:#203449; --chip:#17304A;
+  --link:#7DBCF5; --ok:#4ADE80; --warn:#F5B454; --hero:#0D2A47; color-scheme:dark;
 }
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--fg);font:16px/1.55 var(--f-body);
-  padding-block:0 4rem;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.wrap{max-width:880px;margin:0 auto}
-header.top{padding-block:2rem 1.25rem}
-.eyebrow{font:500 .75rem/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-h1{font:800 clamp(1.9rem,5vw,2.8rem)/1.05 var(--f-display);margin:.6rem 0 .6rem;text-wrap:balance;letter-spacing:-.01em}
-.lede{color:var(--muted);max-width:64ch;margin:0}
-.panel{margin-top:1.2rem;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:1rem 1.1rem}
-.panel .row{display:flex;justify-content:space-between;gap:1rem;align-items:baseline;flex-wrap:wrap}
-.big{font:700 1.6rem/1 var(--f-display);font-variant-numeric:tabular-nums}
-.big small{font:500 .85rem var(--f-mono);color:var(--muted)}
-.bar{height:8px;background:var(--chip);border-radius:4px;margin-top:.7rem;overflow:hidden;position:relative}
-.bar>i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
-.bar>b{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--fg);left:0}
-.plan{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.8rem;margin-top:1rem}
-.plan label{display:block;font:500 .72rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:.25rem}
-.plan input{width:100%;font:500 .95rem var(--f-body);color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:.45rem .55rem}
-.status{margin:.8rem 0 0;font-size:.9rem}
-.status.ok{color:var(--ok)} .status.late{color:var(--warn)}
-.filters{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.25rem 0 1.5rem}
-.filters button{font:500 .8rem var(--f-mono);background:var(--chip);color:var(--fg);border:1px solid transparent;border-radius:4px;padding:.4rem .7rem;cursor:pointer}
-.filters button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
-button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.mod{background:var(--surface);border:1px solid var(--line);border-radius:6px;margin-bottom:1.1rem;overflow:hidden}
-.mod>header{padding:1rem 1.1rem .85rem;border-bottom:1px solid var(--line)}
-.mod h2{font:700 1.25rem/1.2 var(--f-display);margin:0;display:flex;gap:.7rem;align-items:baseline;flex-wrap:wrap}
-.mod h2 .n{font:500 .8rem var(--f-mono);color:var(--accent)}
-.mod .meta{display:flex;justify-content:space-between;gap:.3rem 1rem;flex-wrap:wrap;margin-top:.4rem;font:400 .8rem var(--f-mono);color:var(--muted)}
-.mod .goal{margin:.55rem 0 0;color:var(--muted);font-size:.92rem}
-.res{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:.2rem .9rem;align-items:center;padding:.8rem 1.1rem;border-top:1px solid var(--line)}
-.res:first-of-type{border-top:0}
-.res input{width:1.15rem;height:1.15rem;accent-color:var(--accent);margin:0}
-.res .t{min-width:0}
-.res .ti{font-weight:600;overflow-wrap:anywhere}
-.res .sub{font:400 .78rem/1.4 var(--f-mono);color:var(--muted);margin-top:.15rem;display:flex;gap:.4rem .8rem;flex-wrap:wrap}
-.tag{font:500 .68rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;background:var(--chip);border-radius:3px;padding:.1rem .4rem;color:var(--fg)}
-.go{font:600 .85rem var(--f-body);text-decoration:none;background:var(--accent);color:var(--on-accent);padding:.5rem .8rem;border-radius:4px;white-space:nowrap}
-.go:hover{filter:brightness(1.08)}
+body{background:var(--bg);color:var(--fg);font:16px/1.6 var(--f-body);padding-block:0 4rem}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--hero);z-index:30}
+a{color:var(--link)}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.in{max-width:920px;margin:0 auto}
+button,input,textarea{font:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+/* barra */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--hero);color:var(--hero-fg)}
+.bar .in{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-block:.7rem}
+.brand{display:flex;align-items:center;gap:.7rem;color:inherit;text-decoration:none;font:700 1rem var(--f-display)}
+.brand i{display:grid;place-items:center;width:2rem;height:2rem;background:var(--accent);color:var(--on-accent);font:800 .8rem var(--f-display);font-style:normal;border-radius:4px}
+.bar .st{font:500 .78rem var(--f-mono);color:var(--hero-muted);white-space:nowrap}
+
+/* hero */
+.hero{background:var(--hero);color:var(--hero-fg);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:32px 32px;padding-block:2.5rem 3rem}
+.hero .in{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2rem;align-items:center}
+.eyebrow{font:500 .75rem/1.3 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--hero-muted)}
+.hero h1{font:800 clamp(2.1rem,6vw,3.6rem)/1.02 var(--f-display);margin:.7rem 0 1rem;letter-spacing:-.02em;text-wrap:balance}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero p{margin:0;color:var(--hero-muted);max-width:52ch}
+.cta{display:inline-block;margin-top:1.4rem;background:var(--accent);color:var(--on-accent);font:700 1rem var(--f-body);text-decoration:none;padding:.8rem 1.3rem;border-radius:4px}
+.cta:hover{filter:brightness(1.06)}
+.ring{position:relative;width:150px;height:150px}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring .tr{stroke:rgba(255,255,255,.14)} .ring .fg{stroke:var(--accent);transition:stroke-dashoffset .4s}
+.ring .c{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.ring .c b{font:800 2rem/1 var(--f-display)} .ring .c span{font:500 .72rem var(--f-mono);color:var(--hero-muted)}
+
+/* plano */
+.plan{margin-top:-1.6rem;position:relative}
+.plan .box{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:1.1rem 1.2rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1rem;align-items:end}
+.plan label{display:block;font:500 .7rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem}
+.plan input{width:100%;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:.5rem .6rem}
+.plan .big{font:700 1.15rem var(--f-display)}
+.plan .msg{grid-column:1/-1;margin:0;font-size:.92rem;color:var(--muted)}
+.plan .msg.ok{color:var(--ok)} .plan .msg.late{color:var(--warn)}
+
+/* lista de aulas */
+h2.sec{font:700 1.5rem var(--f-display);margin:2.5rem 0 1rem;letter-spacing:-.01em}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:1rem}
+.card{position:relative;display:flex;flex-direction:column;gap:.5rem;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:1.1rem 1.2rem 1.2rem;text-decoration:none;color:var(--fg);overflow:hidden;min-height:190px}
+.card:hover{border-color:var(--fg)}
+.card .num{font:800 4.2rem/.9 var(--f-display);color:transparent;-webkit-text-stroke:1.5px var(--line);margin-bottom:.2rem}
+.card:hover .num{-webkit-text-stroke-color:var(--accent)}
+.card h3{font:700 1.08rem/1.25 var(--f-display);margin:0;text-wrap:balance}
+.card .m{margin-top:auto;display:flex;justify-content:space-between;gap:.5rem;font:500 .74rem var(--f-mono);color:var(--muted)}
+.card .pb{height:5px;background:var(--chip);border-radius:3px;overflow:hidden;margin-top:.5rem}
+.card .pb i{display:block;height:100%;background:var(--ok)}
+.card.done .num{-webkit-text-stroke-color:var(--ok)}
+
+/* aula */
+.lh{background:var(--hero);color:var(--hero-fg);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:32px 32px;padding-block:1.6rem 2.4rem}
+.back{color:var(--hero-muted);font:500 .8rem var(--f-mono);text-decoration:none}
+.back:hover{color:var(--hero-fg)}
+.lh h1{font:800 clamp(1.8rem,5vw,3rem)/1.05 var(--f-display);margin:1rem 0 .6rem;letter-spacing:-.02em;text-wrap:balance}
+.lh .n{font:800 clamp(4rem,12vw,7rem)/.85 var(--f-display);color:transparent;-webkit-text-stroke:2px var(--accent);display:block}
+.lh p{margin:0;color:var(--hero-muted);max-width:60ch}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.1rem}
+.chip{font:500 .74rem var(--f-mono);background:rgba(255,255,255,.1);color:var(--hero-fg);border-radius:3px;padding:.25rem .55rem}
+.body{padding-top:2rem}
+.aula{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:1.4rem 1.5rem}
+.aula h2{font:700 1.25rem var(--f-display);margin:0 0 .7rem}
+.aula p{max-width:68ch;margin:.7rem 0}
+.aula ul{max-width:68ch;margin:.5rem 0;padding-left:1.2rem}
+.aula li{margin:.25rem 0}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:.8rem;counter-reset:s}
+.step{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:.3rem 1rem;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:1rem 1.1rem}
+.step .c{width:1.4rem;height:1.4rem;accent-color:var(--ok);margin:.15rem 0 0}
+.step.done{opacity:.72}
+.step.done .tt{text-decoration:line-through}
+.kind{display:inline-block;font:500 .68rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;background:var(--chip);border-radius:3px;padding:.12rem .45rem;margin-right:.4rem}
+.kind.v{background:var(--accent);color:var(--on-accent)}
+.pick{font:600 .68rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ok)}
+.pick.alt{color:var(--muted)}
+.tt{font:600 1.02rem/1.35 var(--f-body);margin:.35rem 0 .2rem;overflow-wrap:anywhere}
+.why{font-size:.9rem;color:var(--muted);margin:.1rem 0}
+.mt{font:400 .75rem var(--f-mono);color:var(--muted);margin-top:.35rem;display:flex;flex-wrap:wrap;gap:.3rem .9rem}
+.go{align-self:center;font:700 .88rem var(--f-body);text-decoration:none;background:var(--accent);color:var(--on-accent);padding:.6rem .95rem;border-radius:4px;white-space:nowrap}
 .go.alt{background:transparent;color:var(--fg);border:1px solid var(--line)}
 .go.alt:hover{border-color:var(--fg)}
-.res.done .ti{color:var(--muted);text-decoration:line-through}
-.res.done .go{opacity:.6}
-.res.hide{display:none}
-.mod.empty{display:none}
-details.x{border-top:1px solid var(--line);padding:.7rem 1.1rem}
-details.x summary{cursor:pointer;font:600 .85rem var(--f-body)}
-details.x ol{margin:.7rem 0 .2rem;padding-left:1.2rem;color:var(--fg)}
-details.x li{margin:.35rem 0}
-details.x .hint{color:var(--muted);font-size:.85rem;margin:.5rem 0 0}
-details.x textarea{width:100%;min-height:6rem;margin-top:.6rem;font:400 .92rem/1.5 var(--f-body);color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:.6rem;resize:vertical}
-.guia{background:var(--surface);border:1px solid var(--line);border-radius:6px;margin:1.25rem 0;overflow:hidden}
-.guia>header{padding:1rem 1.1rem;border-bottom:1px solid var(--line)}
-.guia h2{font:700 1.25rem/1.2 var(--f-display);margin:0}
-.guia header p{margin:.4rem 0 0;color:var(--muted);font-size:.92rem}
-.guia details{border-top:1px solid var(--line);padding:.8rem 1.1rem}
-.guia details:first-of-type{border-top:0}
-.guia summary{cursor:pointer;font:600 .95rem var(--f-body)}
-.guia dl{margin:.8rem 0 0;display:grid;grid-template-columns:minmax(0,11rem) minmax(0,1fr);gap:.55rem 1rem}
-.guia dt{font:500 .8rem/1.4 var(--f-mono);color:var(--accent);overflow-wrap:anywhere}
-.guia dd{margin:0;font-size:.92rem}
-.guia .warn{font-size:.82rem;color:var(--muted);margin:.8rem 0 0}
-@media (max-width:560px){.guia dl{grid-template-columns:1fr;gap:.1rem}.guia dd{margin-bottom:.6rem}}
-.note{color:var(--muted);font-size:.85rem;margin-top:2rem;border-top:1px solid var(--line);padding-top:1rem}
-.note b{color:var(--fg)}
-@media (max-width:560px){
-  .res{grid-template-columns:auto minmax(0,1fr)}
-  .res .go{grid-column:2;justify-self:start;margin-top:.45rem}
+.go:hover{filter:brightness(1.06)}
+.opt{opacity:.9}
+.blk{background:var(--surface);border:1px solid var(--line);border-radius:6px;margin-top:1rem}
+.blk>summary{cursor:pointer;padding:1rem 1.2rem;font:700 1.05rem var(--f-display)}
+.blk>div{padding:0 1.2rem 1.2rem}
+.blk ol{margin:0;padding-left:1.2rem} .blk li{margin:.4rem 0}
+.blk textarea{width:100%;min-height:8rem;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:.7rem;resize:vertical}
+.hint{font-size:.85rem;color:var(--muted)}
+.pn{display:flex;justify-content:space-between;gap:1rem;margin-top:2rem;flex-wrap:wrap}
+.pn a{flex:1 1 220px;display:block;text-decoration:none;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:.9rem 1.1rem}
+.pn a:hover{border-color:var(--fg)}
+.pn small{display:block;font:500 .72rem var(--f-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.pn a.r{text-align:right}
+.sub{margin:2rem 0 .8rem;font:700 1.3rem var(--f-display)}
+
+/* diagnóstico */
+.diag{display:grid;gap:.6rem;margin-top:.8rem}
+.dr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.4rem 1rem;align-items:center;padding:.55rem 0;border-top:1px solid var(--line)}
+.dr:first-child{border-top:0}
+.sc{display:flex;gap:.3rem}
+.sc button{width:2.2rem;height:2.2rem;border-radius:4px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer;font:600 .9rem var(--f-mono)}
+.sc button[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.res{margin-top:1rem;padding:1rem 1.1rem;background:var(--bg);border-radius:6px;border:1px dashed var(--line)}
+.res b{font-family:var(--f-display)}
+
+.foot{margin-top:3rem;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padding-top:1rem}
+.foot b{color:var(--fg)}
+@media (max-width:620px){
+  .hero .in{grid-template-columns:1fr}
+  .ring{width:120px;height:120px}
+  .step{grid-template-columns:auto minmax(0,1fr)}
+  .step .go{grid-column:2;justify-self:start;margin-top:.5rem}
+  .dr{grid-template-columns:1fr}
 }
-@media (prefers-reduced-motion:reduce){.bar>i{transition:none}}
+@media (prefers-reduced-motion:reduce){.ring .fg{transition:none}}
 </style>
 
-<div class="wrap">
-<header class="top">
-  <div class="eyebrow">100 h · autoestudo · Alex · construção civil no Brasil</div>
-  <h1>Pós em Administração Contratual</h1>
-  <p class="lede">Contratos de obra, pleitos, reequilíbrio e Dispute Boards, com a técnica de prazo e custo da AACE, a legislação e o TCU no lado brasileiro e cursos da FGV como complemento. Clique em Abrir, estude e marque como feito.</p>
-
-  <div class="panel" aria-live="polite">
-    <div class="row"><div class="big" id="pct">0 h <small>de 100 h concluídas</small></div><div class="eyebrow" id="cnt"></div></div>
-    <div class="bar"><i id="fill"></i><b id="mark" title="Onde você deveria estar hoje"></b></div>
-    <div class="plan">
-      <div><label for="start">Início</label><input type="date" id="start"></div>
-      <div><label for="hpw">Horas por semana</label><input type="number" id="hpw" min="1" max="60" step="1"></div>
-      <div><label>Término previsto</label><div id="endDate" style="padding:.45rem 0;font-weight:600"></div></div>
-    </div>
-    <p class="status" id="status"></p>
-  </div>
-</header>
-<section class="guia" id="guia">
-<header><h2>Guia: o que é cada coisa</h2><p>Leitura de apoio, fora das 100 h. Explica cada módulo, cada documento e cada termo que aparece no curso. Escrevi de memória: use como mapa e confirme o texto na fonte antes de citar.</p></header>
-<details open><summary>1. Os 10 módulos e para que serve cada um</summary>
-<dl>
-<dt>M0 Orientação</dt><dd>Escolhe o pleito real que vai servir de laboratório. Todo exercício seguinte roda em cima dele.</dd>
-<dt>M1 Fundamentos</dt><dd>A base jurídica e contratual da obra: empreitada no Código Civil, tipos de preço, risco e mudança. Sem isso, o resto vira técnica sem contrato.</dd>
-<dt>M2 Contratos públicos</dt><dd>Como a Lei 14.133 e o TCU tratam alteração, reequilíbrio, BDI e extinção em obra pública.</dd>
-<dt>M3 Pleito e notificação</dt><dd>Onde a maioria dos pleitos morre: prazo de notificação perdido e falta de registro contemporâneo.</dd>
-<dt>M4 Cronograma e CPM</dt><dd>Qualidade do cronograma. Análise de atraso sobre cronograma ruim produz número ruim.</dd>
-<dt>M5 Análise de atraso</dt><dd>A RP 29R-03 da AACE: como provar quanto de atraso cada evento causou. É o núcleo técnico.</dd>
-<dt>M6 TIA e concorrência</dt><dd>Impacto de tempo prospectivo e o que fazer quando duas causas atrasam ao mesmo tempo.</dd>
-<dt>M7 Quantum</dt><dd>Transformar atraso e mudança em dinheiro: custo de atraso, BDI, perda de produtividade e valor agregado.</dd>
-<dt>M8 Dispute Boards</dt><dd>Comitês de disputas nas regras da ICC, CAM-CCBC e CBMA e na Lei 14.133. É onde o pleito pronto é decidido.</dd>
-<dt>M9 Projeto final</dt><dd>Monta tudo em um dossiê do seu caso real.</dd>
-</dl></details>
-<details><summary>2. Documentos e siglas</summary>
-<dl>
-<dt>Código Civil, arts. 610 a 626</dt><dd>Contrato de empreitada. O art. 618 trata da garantia de solidez e segurança da obra.</dd>
-<dt>Lei 14.133/2021</dt><dd>Nova lei de licitações e contratos. Alterações contratuais em arts. 124 a 136 (o art. 125 fixa limites de acréscimos e supressões), extinção a partir do art. 137 e meios alternativos de solução de controvérsias em arts. 151 a 154, que incluem o comitê de resolução de disputas.</dd>
-<dt>TCU</dt><dd>Tribunal de Contas da União. Seus acórdãos viram referência prática em obra pública. O Acórdão 2622/2013 fixa faixas de referência de BDI por tipo de obra.</dd>
-<dt>SINAPI e SICRO</dt><dd>Bases oficiais de custos de referência. SINAPI é da Caixa e do IBGE e cobre obras de edificação e saneamento. SICRO é do DNIT e cobre obras rodoviárias e de infraestrutura de transporte.</dd>
-<dt>AACE International</dt><dd>Associação de engenharia de custos e controle de projetos. Publica as Práticas Recomendadas (RP) e as certificações PSP, EVP e CCP.</dd>
-<dt>RP 24R-03, 49R-06, 38R-06, 37R-06</dt><dd>Boas práticas de cronograma: lógica das atividades, identificação do caminho crítico, documentação da base do cronograma e níveis de detalhe.</dd>
-<dt>RP 29R-03</dt><dd>Análise forense de cronograma: descreve nove métodos de análise de atraso e os fatores para escolher entre eles. Não manda usar um método; exige que a escolha seja justificada.</dd>
-<dt>RP 52R-06</dt><dd>Análise de impacto de tempo prospectiva: simula o efeito de um evento no cronograma antes de ele acabar.</dd>
-<dt>RP 25R-03</dt><dd>Estimativa de perda de produtividade da mão de obra em pleitos.</dd>
-<dt>PMI</dt><dd>Instituto de gerenciamento de projetos. Aqui entram o Practice Standard for Scheduling (como construir e manter o cronograma) e o Standard for Earned Value Management.</dd>
-<dt>Protocolo SCL</dt><dd>Documento da Society of Construction Law sobre atraso e disrupção. Não tem força de lei, a menos que o contrato o adote. Diverge da AACE em pontos como atraso concorrente.</dd>
-<dt>ICC Dispute Board Rules</dt><dd>Regras da Câmara de Comércio Internacional para comitês de disputas, em vigor desde 2015.</dd>
-<dt>CAM-CCBC e CBMA</dt><dd>Centros brasileiros de arbitragem e mediação, com regulamentos próprios para dispute boards.</dd>
-<dt>FGV</dt><dd>Aparece como curso complementar opcional (gestão de disputas em infraestrutura e MBA de construção), fora das 100 h.</dd>
-</dl></details>
-<details><summary>3. Os nove métodos da RP 29R-03</summary>
-<dl>
-<dt>Como se classificam</dt><dd>Cada método combina três eixos: observacional ou modelado, estático ou dinâmico, e aditivo ou subtrativo. Observacional compara o que aconteceu; modelado simula inserindo ou retirando atrasos.</dd>
-<dt>Observacionais estáticos</dt><dd>Comparam duas fotografias do cronograma: o planejado contra o realizado, em bloco ou por períodos. Simples e baratos; ignoram mudança de lógica entre as fotografias.</dd>
-<dt>Observacionais dinâmicos</dt><dd>Usam as atualizações do cronograma ao longo da obra, por janelas de tempo. Em geral os mais aceitos quando as atualizações são confiáveis. Dependem de dados contemporâneos.</dd>
-<dt>Modelados aditivos</dt><dd>Inserem os atrasos reclamados num cronograma-base e veem o efeito. Sensíveis à escolha do cronograma-base.</dd>
-<dt>Modelados subtrativos</dt><dd>Retiram os atrasos do cronograma real para ver quando a obra terminaria sem eles. Servem para atribuir responsabilidade, mas são contestáveis.</dd>
-<dt>Como escolher</dt><dd>A norma lista fatores como a qualidade e a disponibilidade dos dados, o tamanho do atraso, o prazo e o orçamento da análise, as exigências do contrato e a complexidade dos eventos.</dd>
-</dl>
-<p class="warn">Reconstruí a classificação de memória. Os nomes exatos e a numeração dos nove protocolos estão no sumário da RP 29R-03, que é o primeiro item do módulo 5.</p></details>
-<details><summary>4. Glossário de obra e pleito</summary>
-<dl>
-<dt>Caminho crítico</dt><dd>Sequência de atividades que define a data final. Atrasá-las atrasa a obra.</dd>
-<dt>Float total e livre</dt><dd>Folga. Total é quanto uma atividade pode atrasar sem atrasar o término da obra. Livre é quanto pode atrasar sem atrasar a sucessora.</dd>
-<dt>EOT</dt><dd>Extensão de prazo (prorrogação), com ou sem custo. Prazo e dinheiro são pedidos separados e provados separadamente.</dd>
-<dt>Reajuste, revisão e reequilíbrio</dt><dd>Reajuste aplica índice previsto no contrato, em geral a cada 12 meses. Reequilíbrio (também chamado revisão ou recomposição) recompõe o equilíbrio econômico por fato extraordinário ou alteração do contrato. Não são a mesma ferramenta.</dd>
-<dt>Pleito (claim)</dt><dd>Pedido formal de prazo, valor ou ambos, ligado a uma causa, com prova de nexo entre causa e efeito.</dd>
-<dt>Nexo causal</dt><dd>Prova de que o evento específico causou o atraso ou o custo específico.</dd>
-<dt>BDI</dt><dd>Bonificação e despesas indiretas: taxa aplicada ao custo direto para cobrir administração central, tributos, seguros, riscos e lucro.</dd>
-<dt>Custo de atraso</dt><dd>Custo de manter a obra ativa por mais tempo: administração local, canteiro, equipamentos e estrutura parada.</dd>
-<dt>Perda de produtividade</dt><dd>Mesmo trabalho exigindo mais horas que o planejado por causa de interferência. Medida pelo Measured Mile (compara trecho afetado com trecho não afetado) ou por métodos de custo total.</dd>
-<dt>TIA</dt><dd>Time Impact Analysis. Insere um evento no cronograma vigente para medir o impacto no término.</dd>
-<dt>Atraso concorrente</dt><dd>Duas ou mais causas, de partes diferentes, atrasam o término no mesmo período. O tratamento varia por contrato e por protocolo.</dd>
-<dt>Valor agregado (EVM)</dt><dd>Compara o previsto (PV), o realizado em valor (EV) e o custo real (AC). SPI = EV ÷ PV mede prazo; CPI = EV ÷ AC mede custo.</dd>
-<dt>DRB, DAB e CDB</dt><dd>Nas regras da ICC, o DRB emite recomendações que só vinculam se ninguém objetar em 30 dias; o DAB emite decisões de cumprimento imediato; o CDB combina os dois.</dd>
-<dt>Avoidance</dt><dd>Função preventiva do comitê: acompanhar a obra e resolver divergências antes de virarem disputa.</dd>
-</dl></details>
-</section>
-<div class="filters" id="filters" role="group" aria-label="Filtrar por tipo"></div>
-<main id="mods"></main>
-<p class="note"><b>Como ler os botões.</b> <b>Abrir</b> leva a uma página que apareceu em pesquisa; não consegui abrir nenhuma por dentro, então confirme a edição vigente. <b>Buscar</b> abre uma pesquisa pronta (YouTube, livros ou web), porque não assisti a vídeos nem tenho link oficial confirmado para o item. Normas completas da AACE e do PMI são pagas ou exclusivas de membros. A 29R-03 tem rascunho de revisão em andamento; confirme a versão atual. <b>Direito e jurisprudência:</b> este painel não substitui parecer jurídico. <b>FIDIC:</b> fora do currículo por decisão sua; se um contrato com financiamento multilateral ou EPC internacional chegar, estude a minuta específica dele. As questões de fixação não têm gabarito de propósito: responda de memória e confira na fonte.</p>
-</div>
+<div class="bar gut"><div class="in">
+  <a class="brand" href="#"><i>PAC</i><span>Pós em Administração Contratual</span></a>
+  <span class="st" id="topst"></span>
+</div></div>
+<div id="app"></div>
 
 <script>
-const YT=q=>'https://www.youtube.com/results?search_query='+encodeURIComponent(q);
-const BK=q=>'https://www.google.com/search?tbm=bks&q='+encodeURIComponent(q);
-const WB=q=>'https://www.google.com/search?q='+encodeURIComponent(q);
-const D=u=>({u,mode:'direto'}), S=u=>({u,mode:'busca'});
-const MODS=[
-{n:0,t:'Orientação e diagnóstico',h:2,g:'Escolher o pleito real que será o laboratório do curso.',q:[
- 'Qual obra e qual evento (atraso, aditivo, perda de produtividade) serão seu caso de estudo?',
- 'Quais documentos desse caso você já tem em mãos (contrato, cronogramas, diário de obra, cartas)?'],r:[
- {t:'Listar 3 pleitos reais (anonimizados) e escolher o caso do projeto final',k:'exercício',h:2}
-]},
-{n:1,t:'Fundamentos da administração contratual de obras',h:12,g:'Empreitada no Código Civil, modalidades de preço, matriz de risco e controle de mudanças.',q:[
- 'Qual a diferença de risco de quantitativo entre empreitada por preço global e por preço unitário?',
- 'Qual o prazo e o artigo do Código Civil sobre solidez e segurança da obra?',
- 'O que a matriz de risco do seu contrato principal aloca ao contratado e ao contratante?',
- 'Como o seu contrato define "evento compensável"?'],r:[
- {t:'Código Civil, arts. 610 a 626 (contrato de empreitada)',k:'norma',h:2,s:'Planalto',l:D('https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm')},
- {t:'Modalidades: preço global, preço unitário, administração, EPC e turn-key',k:'artigo',h:2,s:'busca na web',l:S(WB('empreitada preço global preço unitário administração EPC turnkey diferenças risco contrato de obra'))},
- {t:'Matriz de risco e gestão de mudanças em contratos de obra',k:'artigo',h:2,s:'busca na web',l:S(WB('matriz de risco contrato de obra alocação de riscos gestão de mudanças construção civil'))},
- {t:'Livro de direito da construção (escolha um da busca e leia a parte contratual)',k:'livro',h:3,s:'busca de livros',l:S(BK('direito da construção contratos de obra empreitada administração contratual'))},
- {t:'Vídeos: administração contratual de obras',k:'video',h:1,s:'busca no YouTube',l:S(YT('administração contratual de obras gestão de contratos construção civil aula'))},
- {t:'Exercício: ler o seu contrato principal e listar cláusulas de prazo, preço, mudança e notificação',k:'exercício',h:2},
- {t:'Complemento: MBA FGV em Gestão, Incorporação e Construção Imobiliária (grade inclui contratos e aquisições)',k:'curso',h:0,s:'FGV · opcional · fora das 100 h',l:D('https://educacao-executiva.fgv.br/rj/nova-iguacu/cursos/mba-pos-graduacao/mba-blended-semipresencial/mba-em-gestao-incorporacao-e-construcao-imobiliaria')}
-]},
-{n:2,t:'Contratos públicos de obras: Lei 14.133 e TCU',h:12,g:'Alteração contratual, reequilíbrio, BDI, sanções e extinção em obra pública.',q:[
- 'Quais as hipóteses de alteração unilateral e consensual do art. 124?',
- 'Quais os limites de acréscimos e supressões e a exceção para reforma?',
- 'Em que prazo e antes de qual evento o pedido de reequilíbrio deve ser feito?',
- 'O que o BDI cobre e como o Acórdão 2622/2013 do TCU é usado como referência?'],r:[
- {t:'Lei 14.133/2021: alterações (arts. 124 a 136) e extinção (a partir do art. 137)',k:'norma',h:3,s:'Planalto',l:D('https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2021/lei/l14133.htm')},
- {t:'Lei 14.133 comentada: art. 124',k:'artigo',h:1,s:'TCE-SP',l:D('https://www.tce.sp.gov.br/legislacao-comentada/lei-14133-1o-abril-2021/124')},
- {t:'Licitações e Contratos: orientações sobre reequilíbrio (recomposição ou revisão)',k:'artigo',h:2,s:'TCU',l:D('https://licitacoesecontratos.tcu.gov.br/6-2-2-1-1-reequilibrio-economico-financeiro-recomposicao-ou-revisao-2')},
- {t:'Reequilíbrio econômico-financeiro de contratos de obras públicas',k:'pdf',h:2,s:'TCU',l:D('https://portal.tcu.gov.br/data/files/0B/05/99/3A/2516E810943E72C8E18818A8/Reequilibrio%20economico-financeiro%20de%20contratos%20de%20obras%20publicas.pdf')},
- {t:'Acórdão 2622/2013-TCU-Plenário (parâmetros de BDI)',k:'pdf',h:1,s:'cópia no MPF',l:D('https://www.mpf.mp.br/o-mpf/unidades/pr-to/transparencia/licitacoes-novo/2016/12Acordao26222013BDI.pdf')},
- {t:'Sistemas de referência de custos: SINAPI e SICRO',k:'norma',h:1,s:'busca na web',l:S(WB('SINAPI SICRO referência de custos obras públicas metodologia'))},
- {t:'Vídeos: Lei 14.133 contratos e reequilíbrio',k:'video',h:1,s:'busca no YouTube',l:S(YT('Lei 14.133 alteração contratual reequilíbrio econômico-financeiro obras aula'))},
- {t:'Exercício: classificar 3 eventos do seu contrato como alteração, reequilíbrio ou reajuste',k:'exercício',h:1}
-]},
-{n:3,t:'Pleito, notificação e registro contemporâneo',h:8,g:'A parte que decide pleito: notificar no prazo, registrar o que aconteceu e documentar o impacto.',q:[
- 'Qual o prazo de notificação do seu contrato e que evento o dispara?',
- 'Que registros contemporâneos provam a causa do atraso (diário de obra, atas, cartas, medições)?',
- 'Quem assina e aprova uma ordem de mudança no seu contrato?'],r:[
- {t:'Notificação, diário de obra e prova contemporânea em pleitos de obra',k:'artigo',h:2,s:'busca na web',l:S(WB('diário de obra notificação pleito construção civil prova contemporânea atraso reequilíbrio'))},
- {t:'Estrutura de um pleito: causa, efeito, prazo e custo',k:'artigo',h:1,s:'busca na web',l:S(WB('estrutura de pleito construção civil causa efeito nexo causal prazo custo claim'))},
- {t:'Gestão de ordens de mudança em contratos de obra',k:'artigo',h:1,s:'busca na web',l:S(WB('gestão de ordens de mudança contratos de obra construção civil procedimento'))},
- {t:'Vídeos: pleitos e claims na construção',k:'video',h:1,s:'busca no YouTube',l:S(YT('claims pleitos construção civil gestão de contratos aula'))},
- {t:'Exercício: matriz de notificações e prazos do seu contrato (evento, prazo, destinatário, forma)',k:'exercício',h:3},
- {t:'Complemento: FGV, Gestão de Disputas em Projetos de Infraestrutura (16 horas-aula; confirme próxima turma)',k:'curso',h:0,s:'FGV · opcional · fora das 100 h',l:D('https://educacao-executiva.fgv.br/produto/gestao-de-disputas-em-projetos-de-infraestrutura-aspectos-teoricos-e-praticos-01tV200000Ij5RNIAZ')}
-]},
-{n:4,t:'Cronograma e CPM: base comum',h:8,g:'Qualidade do cronograma, lógica, caminho crítico e float.',q:[
- 'O que diferencia float total de float livre?',
- 'Quais defeitos de lógica invalidam um cronograma como base de análise?',
- 'Como restrições de data distorcem o caminho crítico?'],r:[
- {t:'Practice Standard for Scheduling, 3ª ed. (confirmar alinhamento ao PMBOK 6 ou 7)',k:'norma',h:3,s:'PMI',l:D('https://www.pmi.org/pt-br/standards/scheduling-third-edition')},
- {t:'AACE RP 24R-03, 49R-06, 38R-06 e 37R-06 (lógica, caminho crítico, base, níveis)',k:'norma',h:2,s:'AACE',l:S(WB('AACE International recommended practice 49R-06 identifying the critical path'))},
- {t:'Understanding construction scheduling',k:'artigo',h:1,s:'ABA',l:D('https://www.americanbar.org/groups/tort_trial_insurance_practice/resources/journal/2022-fall/understanding-construction-scheduling')},
- {t:'Vídeos: CPM, float total e livre',k:'video',h:1,s:'busca no YouTube',l:S(YT('CPM planejamento obras caminho crítico folga total livre aula'))},
- {t:'Exercício: auditar um cronograma real (lógica aberta, restrições, float negativo, calendários)',k:'exercício',h:1}
-]},
-{n:5,t:'Análise de atraso: AACE RP 29R-03',h:16,g:'Os nove métodos, os fatores de seleção e a aplicação a um caso real. Núcleo técnico do curso.',q:[
- 'Cite os nove métodos da 29R-03 e a família a que cada um pertence.',
- 'Que qualidade de dados cada método exige e qual deles seu caso permite?',
- 'Por que um método aditivo e modelado é mais contestável que um observacional?',
- 'Quais fatores a 29R-03 manda considerar para escolher o método?'],r:[
- {t:'Sumário da RP 29R-03 (estrutura dos nove métodos)',k:'pdf',h:1,s:'AACE',l:D('https://web.aacei.org/docs/default-source/toc/toc_29r-03.pdf?sfvrsn=4')},
- {t:'RP 29R-03 completa (membro ou compra no site da AACE)',k:'norma',h:5,s:'AACE · pago',l:S(WB('AACE 29R-03 Forensic Schedule Analysis recommended practice purchase'))},
- {t:'Schedule analysis methods: resumo da 29R-03',k:'pdf',h:1,s:'SlideShare',l:D('https://www.slideshare.net/slideshow/schedule-analysis-methods-aace-29r03-recommendedpdf/264419973')},
- {t:'Webinar AACE sobre análise forense (PathLMS)',k:'video',h:1,s:'AACE · exige conta',l:D('https://www.pathlms.com/aace/courses/50359/webinars/35185')},
- {t:'Segundo webinar AACE (PathLMS)',k:'video',h:1,s:'AACE · exige conta',l:D('https://pathlms.com/aace/courses/50359/webinars/33861')},
- {t:'Forensic scheduling: crítica à revisão da 29R-03',k:'artigo',h:1,s:'ENR',l:D('https://enr.com/articles/56770-forensic-schedulings-groundhog-day-dubious-practices-recommended-again')},
- {t:'Construction Delay Claims (capítulos de métodos)',k:'livro',h:3,s:'Bramble & Callahan',l:S(BK('Construction Delay Claims Bramble Callahan'))},
- {t:'Exercício: aplicar 2 métodos ao mesmo evento e justificar a escolha em 1 página',k:'exercício',h:3},
- {t:'Meta de certificação: AACE PSP (planejamento), EVP (valor agregado), CCP (custos)',k:'curso',h:0,s:'AACE · opcional · fora das 100 h',l:D('https://web.aacei.org/certification/certifications-offered/professional-certifications')}
-]},
-{n:6,t:'TIA prospectivo e atraso concorrente',h:6,g:'Impacto de tempo prospectivo e o confronto entre AACE e o protocolo SCL.',q:[
- 'Quando um TIA prospectivo é melhor que uma análise retrospectiva?',
- 'Como o protocolo SCL e a AACE tratam o atraso concorrente?',
- 'De quem é o float no seu contrato?'],r:[
- {t:'AACE RP 52R-06: Prospective Time Impact Analysis',k:'norma',h:2,s:'AACE',l:S(WB('AACE 52R-06 prospective time impact analysis'))},
- {t:'SCL Delay and Disruption Protocol, 2ª ed. (2017)',k:'norma',h:1,s:'SCL',l:S(WB('SCL Delay and Disruption Protocol second edition 2017 scl.org.uk'))},
- {t:'The SCL Delay and Disruption Protocol: a second edition',k:'artigo',h:1,s:'Fenwick Elliott',l:D('https://www.fenwickelliott.com/research-insight/annual-review/2017/scl-delay-disruption-protocol-second-edition')},
- {t:'Harmonizing SCL DDP2 and AACE 29R-03',k:'artigo',h:1,s:'Mondaq',l:D('https://www.mondaq.com/unitedstates/arbitration-dispute-resolution/1702390/harmonizing-scl-dd2-and-aace-29r-03-complementary-frameworks-for-forensic-delay-analysis-in-international-arbitration')},
- {t:'Exercício: parecer de 2 páginas sobre atraso concorrente num caso seu',k:'exercício',h:1}
-]},
-{n:7,t:'Quantum: reequilíbrio, BDI, produtividade e valor agregado',h:12,g:'Transformar atraso e mudança em valor defensável.',q:[
- 'Como separar custo direto, custo de atraso (indireto) e perda de produtividade?',
- 'O que é o método do Measured Mile e quando ele não se aplica?',
- 'Como o BDI do contrato entra no cálculo de um aditivo?',
- 'O que o PV, EV e AC dizem sobre desvio de prazo e custo?'],r:[
- {t:'AACE RP 25R-03: estimativa de perda de produtividade em claims',k:'norma',h:3,s:'AACE',l:S(WB('AACE 25R-03 estimating lost labor productivity in construction claims'))},
- {t:'Standard for Earned Value Management (2020)',k:'norma',h:2,s:'PMI',l:D('https://www.pmi.org/fr-fr/standards/earned-value-management')},
- {t:'BDI, custos indiretos e aditivos em obras',k:'artigo',h:2,s:'busca na web',l:S(WB('BDI composição aditivo obra custos indiretos prolongamento prazo administração local reequilíbrio'))},
- {t:'Measured Mile, Modified Total Cost e Total Cost',k:'artigo',h:2,s:'busca na web',l:S(WB('measured mile method modified total cost lost productivity construction claims'))},
- {t:'Vídeos: perda de produtividade e valor agregado em obras',k:'video',h:1,s:'busca no YouTube',l:S(YT('valor agregado EVM obras construção civil aula perda de produtividade'))},
- {t:'Exercício: Measured Mile num pacote de trabalho, com limitações',k:'exercício',h:2}
-]},
-{n:8,t:'Dispute Boards no Brasil',h:10,g:'ICC, CAM-CCBC, CBMA, Lei 14.133 e a eficácia da decisão do comitê.',q:[
- 'Qual a diferença entre DRB, DAB e CDB nas regras da ICC?',
- 'O que a Lei 14.133 prevê sobre comitê de resolução de disputas (arts. 151 a 154)?',
- 'Que efeito a decisão tem no seu contrato: vinculante, recomendação ou provisória?',
- 'Quando um DB é melhor que a arbitragem direta numa obra de longo prazo?'],r:[
- {t:'ICC Dispute Board Rules 2015 (apêndices de 2018)',k:'pdf',h:2,s:'ICC',l:D('https://iccwbo.org/wp-content/uploads/sites/3/2015/09/icc-dispute-board-rules-english-version.pdf')},
- {t:'Regulamentos de Dispute Boards: CAM-CCBC e CBMA',k:'norma',h:2,s:'busca na web',l:S(WB('regulamento dispute board CAM-CCBC CBMA comitê de prevenção e solução de disputas'))},
- {t:'Lei 14.133/2021, arts. 151 a 154 (meios alternativos de resolução)',k:'norma',h:1,s:'Planalto',l:D('https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2021/lei/l14133.htm')},
- {t:'Enunciados do CJF sobre Dispute Boards',k:'norma',h:1,s:'busca na web',l:S(WB('enunciados CJF Jornada Prevenção e Solução Extrajudicial de Litígios dispute board'))},
- {t:'Jurisprudência sobre eficácia e execução de decisão de DB',k:'artigo',h:1,s:'busca na web',l:S(WB('decisão dispute board STJ TJSP executividade cumprimento'))},
- {t:'Chern on Dispute Boards (capítulos de procedimento)',k:'livro',h:1,s:'Cyril Chern',l:S(BK('Chern on Dispute Boards'))},
- {t:'DRBF: manual do Dispute Board (acesso de membro)',k:'norma',h:0,s:'DRBF · opcional',l:D('https://drbf.memberclicks.net/dispute-board-manual')},
- {t:'Vídeos: dispute board no Brasil',k:'video',h:1,s:'busca no YouTube',l:S(YT('dispute board Brasil comitê de resolução de disputas CBMA CCBC'))},
- {t:'Exercício: tabela ICC × CAM-CCBC × CBMA (nomeação, prazo, efeito, custo)',k:'exercício',h:1},
- {t:'Complemento: FGV, Gestão de Disputas em Projetos de Infraestrutura',k:'curso',h:0,s:'FGV · opcional · fora das 100 h',l:D('https://educacao-executiva.fgv.br/produto/gestao-de-disputas-em-projetos-de-infraestrutura-aspectos-teoricos-e-praticos-01tV200000Ij5RNIAZ')}
-]},
-{n:9,t:'Projeto final',h:14,g:'Dossiê de um pleito real anonimizado. Critério: um sênior reproduz seus números só com o dossiê.',q:[
- 'Um terceiro consegue reproduzir seus números só com o dossiê?',
- 'Qual premissa do seu dossiê é a mais frágil e como você a defenderia?'],r:[
- {t:'Matriz contratual de notificações e prazos',k:'exercício',h:2},
- {t:'Análise de atraso por dois métodos',k:'exercício',h:3},
- {t:'Quantum: reequilíbrio, custo de atraso e produtividade',k:'exercício',h:3},
- {t:'Minuta de pleito ou manifestação ao comitê de disputas',k:'exercício',h:2},
- {t:'Parecer sobre risco contratual e cláusula de resolução de disputas',k:'exercício',h:2},
- {t:'Decisão-espelho',k:'exercício',h:1},
- {t:'Lições para prevenir a disputa (avoidance)',k:'exercício',h:1}
-]}
+/* ========= utilidades de link ========= */
+const D=u=>({u,mode:"direto"}), S=u=>({u,mode:"busca"});
+const yt=id=>D("https://www.youtube.com/watch?v="+id);
+const YT=q=>S("https://www.youtube.com/results?search_query="+encodeURIComponent(q));
+const BK=q=>S("https://www.google.com/search?tbm=bks&q="+encodeURIComponent(q));
+const WB=q=>S("https://www.google.com/search?q="+encodeURIComponent(q));
+/* step: [kind, título, porquê, horas, link, papel(P=principal, A=alternativa, ''), fonte] */
+const st_=(k,t,why,h,l,pick,src)=>({k,t,why,h,l,pick:pick||"",src:src||""});
+
+/* ========= conteúdo ========= */
+const LESSONS=[
+{n:1,t:"Orientação e diagnóstico",h:4,goal:"Entender o que você está construindo, medir de onde parte e escolher o caso real que vai guiar o curso.",
+ intro:[
+ "Alexis, o objetivo desta pós não é acumular horas de vídeo. É sair capaz de fazer quatro coisas com um contrato de obra na mão: ler onde está o risco, registrar o que acontece, provar quanto prazo e quanto dinheiro cada evento custou e levar isso a uma negociação ou a um comitê de disputas.",
+ "A tese que organiza tudo: pleito é prova, não argumento. A maioria dos pleitos de obra no Brasil não perde porque o direito é fraco. Perde porque a notificação saiu fora do prazo, o diário de obra não registrou o evento e o cronograma não permite medir o atraso. Por isso o curso começa no contrato, passa por cronograma e custo e só então chega ao Dispute Board.",
+ "O perfil que você está formando é o de administrador contratual e analista de pleitos de obra. Na prática: gerente de contratos de construtora, consultor de claims, assessor de comitê de disputas e, mais adiante, candidato a membro de comitê.",
+ "Método de estudo em quatro passagens por aula: (1) leia a explicação, (2) assista ao vídeo principal e anote, (3) leia a norma ou o capítulo indicado, (4) aplique no seu caso. Responda as perguntas de fixação de memória antes de consultar as fontes.",
+ "Critério de sucesso do curso: ao final, um engenheiro sênior reproduz os números do seu dossiê sem falar com você. Se isso não acontece, o dossiê não está pronto, por melhor que seja a argumentação.",
+ "Limites. O curso é técnico e de gestão, não parecer jurídico. Prazos, efeitos de decisões e jurisprudência devem ser confirmados com advogado e na fonte oficial antes de uso em um caso real."],
+ steps:[
+ st_("exercício","Diagnóstico: avalie as 9 competências do curso","O resultado indica em quais aulas gastar mais tempo e quais pode percorrer rápido.",1,null,"",""),
+ st_("vídeo","X SeTEC: Gestão de contratos na construção civil","Escolhido como principal por ser em português, falar de construção civil e ter o tema de gestão de contratos no próprio título.",1,yt("AkwMdpY5Eao"),"P","Palestra · 2020"),
+ st_("vídeo","Engenharia Legal: Contratos na Engenharia. Como construir e gerir contratos","Segunda perspectiva em português, voltada a projetos industriais. Complementa a primeira com a visão de quem estrutura o contrato.",1,yt("nt9KleE36qg"),"P","Workshop"),
+ st_("exercício","Escolher o caso real do curso (um pleito seu, anonimizado)","Todo exercício das próximas aulas roda em cima dele. Escolha um com cronograma, cartas e diário de obra acessíveis.",1,null,"",""),
+ st_("vídeo","Alternativa: Gestão de Contratos de Construção Civil, estratégias para maximizar eficiência","Webinar de software de gestão com um gerente de planejamento de incorporadora. Útil como visão de mercado.",0,yt("JKwNeNtJHtk"),"A","Webinar Sienge e Prevision"),
+ st_("vídeo","Alternativa em inglês: Construction Contract Administration, guia passo a passo","Para ouvir o vocabulário internacional do tema.",0,yt("qzKTvbGs3j0"),"A","YouTube")
+ ],
+ q:["Qual obra e qual evento (atraso, aditivo, perda de produtividade) serão seu caso de estudo?","Quais documentos desse caso você já tem em mãos (contrato, cronogramas, diário de obra, cartas)?","O que você quer ser capaz de fazer em 10 semanas que hoje não faz?"]},
+
+{n:2,t:"Fundamentos da administração contratual de obras",h:12,goal:"Empreitada, tipos de preço, risco e controle de mudanças: a base sem a qual o resto vira técnica sem contrato.",
+ intro:[
+ "Na obra privada, o contrato manda, e o Código Civil preenche as lacunas. A empreitada está nos arts. 610 a 626. O art. 618 impõe ao empreiteiro responsabilidade pela solidez e segurança da obra por cinco anos, um prazo que as partes não reduzem por contrato.",
+ "O tipo de preço define quem carrega qual risco. No preço global, o contratado assume o risco de quantidade: se o projeto não mudou, errou o quantitativo, paga. No preço unitário, o contratante paga o que foi medido e carrega o risco de variação de quantidade. Na administração, o contratante reembolsa custos mais uma taxa, e o risco de custo é dele. No EPC ou turn-key, o contratado assume projeto, suprimento e construção, e com isso o risco das interfaces.",
+ "A matriz de risco é a ferramenta que diz, para cada evento, quem paga e quem ganha prazo. Todo pleito nasce na fronteira entre um risco do contratante e um do contratado. Se a matriz é vaga, a disputa é certa.",
+ "Gestão de mudanças é o hábito que evita o pleito: toda alteração de escopo, prazo ou preço precisa de ordem formal, assinada por quem tem poder, antes ou logo depois de acontecer. Mudança executada sem ordem é a principal causa de discussão sobre quem autorizou."],
+ steps:[
+ st_("norma","Código Civil, arts. 610 a 626: contrato de empreitada","Fonte primária. Leia os artigos inteiros e marque o que é regra supletiva e o que as partes não podem afastar.",2,D("https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm"),"P","Planalto"),
+ st_("vídeo","Gestão de Contratos de Construção Civil: estratégias para maximizar eficiência","Principal da aula por ser em português, de construção civil e específico de gestão de contratos.",1,yt("JKwNeNtJHtk"),"P","Webinar Sienge e Prevision"),
+ st_("artigo","Modalidades: preço global, preço unitário, administração, EPC e turn-key","Faça um quadro de quem carrega o risco de quantidade, de custo, de projeto e de prazo em cada uma.",2,WB("empreitada preço global preço unitário administração EPC turnkey diferenças risco contrato de obra"),"P","busca na web"),
+ st_("artigo","Matriz de risco e gestão de mudanças em contratos de obra","Procure texto com exemplo de matriz preenchida. Compare com a do seu contrato.",2,WB("matriz de risco contrato de obra alocação de riscos gestão de mudanças construção civil"),"P","busca na web"),
+ st_("livro","Livro de direito da construção ou contratos de obra","Não consigo garantir um título específico. Critério de escolha: edição dos últimos 5 anos, editora jurídica, com capítulos de empreitada, risco e aditivos. Leia só esses capítulos.",3,BK("direito da construção contratos de obra empreitada administração contratual"),"P","busca de livros"),
+ st_("exercício","Ler o seu contrato principal e listar cláusulas de prazo, preço, mudança e notificação","Cláusulas que você nunca leu inteiras costumam ser as que decidem o pleito.",2,null,"",""),
+ st_("curso","Complemento FGV: MBA em Gestão, Incorporação e Construção Imobiliária","A grade inclui contratos e aquisições. Opcional e pago, fora das 100 h.",0,D("https://educacao-executiva.fgv.br/rj/nova-iguacu/cursos/mba-pos-graduacao/mba-blended-semipresencial/mba-em-gestao-incorporacao-e-construcao-imobiliaria"),"A","FGV")
+ ],
+ q:["Qual a diferença de risco de quantitativo entre empreitada por preço global e por preço unitário?","Qual o prazo e o artigo do Código Civil sobre solidez e segurança da obra?","O que a matriz de risco do seu contrato aloca ao contratado e ao contratante?","Quem tem poder de assinar ordem de mudança no seu contrato?"]},
+
+{n:3,t:"Contratos públicos de obras: Lei 14.133 e TCU",h:12,goal:"Alteração contratual, reequilíbrio, BDI e extinção em obra pública.",
+ intro:[
+ "Em obra pública, o contrato é administrativo: a Administração pode alterar unilateralmente dentro de limites, e o contratado tem direito à manutenção do equilíbrio econômico-financeiro. A Lei 14.133/2021 trata das alterações nos arts. 124 a 136. O art. 125 fixa os limites de acréscimos e supressões (25%, e 50% para reforma de edifício ou equipamento).",
+ "Três ferramentas, três usos. Reajuste aplica o índice previsto no contrato, em geral a cada 12 meses. Repactuação é própria de serviços contínuos com mão de obra. Reequilíbrio recompõe o equilíbrio inicial quando um fato extraordinário ou uma alteração o rompe; o art. 124, II, d, é a base citada para força maior, caso fortuito e fato do príncipe. Segundo orientação do TCU, o pedido deve ser feito durante a vigência do contrato e antes de eventual prorrogação.",
+ "O BDI cobre administração central, tributos, seguros, riscos e lucro. O Acórdão 2622/2013 do TCU fixou faixas de referência por tipo de obra e é a régua usada para discutir se o BDI de um orçamento ou de um aditivo é razoável. Um vídeo da busca cita o Acórdão 2340/2024 sobre BDI diferenciado de equipamentos: confira se ele alterou algo do 2622.",
+ "O erro típico do contratado em obra pública é tratar um pedido de reequilíbrio como se fosse carta comercial. Ele precisa de fato, nexo, planilha e documentos de suporte."],
+ steps:[
+ st_("norma","Lei 14.133/2021: alterações (arts. 124 a 136) e extinção (a partir do art. 137)","Fonte primária. Leia o capítulo de alterações inteiro, com atenção aos arts. 124, 125 e 130.",3,D("https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2021/lei/l14133.htm"),"P","Planalto"),
+ st_("vídeo","Reajuste, Repactuação e Reequilíbrio: Recupere o que é seu","Principal por tratar exatamente da distinção entre as três ferramentas. É voltado a licitantes de serviços; adapte para obra.",1,yt("MiRzGI8Hqbw"),"P","YouTube"),
+ st_("vídeo","Documentos Essenciais para o Reequilíbrio Econômico-Financeiro de Contratos Públicos","Lista o que acompanha o pedido. Compare com o que você montaria hoje.",1,yt("Q0WKFe5l5JQ"),"P","YouTube"),
+ st_("artigo","Lei 14.133 comentada: art. 124","Comentário artigo por artigo de um tribunal de contas.",1,D("https://www.tce.sp.gov.br/legislacao-comentada/lei-14133-1o-abril-2021/124"),"P","TCE-SP"),
+ st_("artigo","TCU, Licitações e Contratos: orientações sobre reequilíbrio","Texto de orientação do próprio tribunal que fiscaliza.",2,D("https://licitacoesecontratos.tcu.gov.br/6-2-2-1-1-reequilibrio-economico-financeiro-recomposicao-ou-revisao-2"),"P","TCU"),
+ st_("pdf","Reequilíbrio econômico-financeiro de contratos de obras públicas","Estudo do TCU específico para obras.",2,D("https://portal.tcu.gov.br/data/files/0B/05/99/3A/2516E810943E72C8E18818A8/Reequilibrio%20economico-financeiro%20de%20contratos%20de%20obras%20publicas.pdf"),"P","TCU"),
+ st_("pdf","Acórdão 2622/2013-TCU-Plenário: parâmetros de BDI","Leia a parte dispositiva e as tabelas de faixas.",1,D("https://www.mpf.mp.br/o-mpf/unidades/pr-to/transparencia/licitacoes-novo/2016/12Acordao26222013BDI.pdf"),"P","cópia no MPF"),
+ st_("exercício","Classificar 3 eventos do seu contrato como alteração, reequilíbrio ou reajuste","Se você hesita entre duas categorias, é porque o contrato ou os fatos são ambíguos. Anote o porquê.",1,null,"",""),
+ st_("livro","Opcional: Comentários à Lei de Licitações e Contratos (Marçal Justen Filho)","Obra de referência sobre a lei. Confirme a edição que cobre a Lei 14.133.",0,BK("Justen Filho Comentários à Lei de Licitações e Contratações Administrativas 14.133"),"A","busca de livros")
+ ],
+ q:["Quais as hipóteses de alteração unilateral e consensual do art. 124?","Quais os limites de acréscimos e supressões e a exceção para reforma?","Em que prazo e antes de qual evento o pedido de reequilíbrio deve ser feito?","O que o BDI cobre e como o Acórdão 2622/2013 do TCU é usado como referência?"]},
+
+{n:4,t:"Pleito, notificação e registro contemporâneo",h:7,goal:"A aula que decide pleito: notificar no prazo, registrar o que aconteceu e provar o nexo.",
+ intro:[
+ "Um pleito completo responde a quatro perguntas: o que aconteceu (evento), de quem é o risco (contrato), que efeito teve no prazo e no custo (nexo causal e quantificação) e o que se pede (prazo, valor ou ambos). Prazo e dinheiro são pedidos separados e se provam separados.",
+ "Notificação: quase todo contrato fixa um prazo para avisar a outra parte do evento. Perder esse prazo pode custar o direito, dependendo da cláusula e do que a lei local permite. Por isso, o primeiro entregável do curso é uma matriz de notificações do seu contrato: evento, prazo, destinatário e forma.",
+ "Prova contemporânea é a que nasce no momento do fato: diário de obra, atas, e-mails, fotos datadas, cartas com protocolo, medições, atualizações de cronograma. Reconstruir depois é mais caro e mais fácil de contestar.",
+ "Os vídeos em português sobre pleito de obra foram escassos na busca. Os melhores achados estão em inglês e servem para fixar vocabulário de claim, tipos de pedido e causas."],
+ steps:[
+ st_("artigo","Notificação, diário de obra e prova contemporânea em pleitos de obra","Procure texto que trate de diário de obra como prova. Anote o que falta no seu.",2,WB("diário de obra notificação pleito construção civil prova contemporânea atraso reequilíbrio"),"P","busca na web"),
+ st_("artigo","Estrutura de um pleito: causa, efeito, nexo, prazo e custo","Modelo de organização. Use para estruturar o seu caso.",1,WB("estrutura de pleito construção civil causa efeito nexo causal prazo custo claim"),"P","busca na web"),
+ st_("vídeo","What Are Construction Claims? (Civil Engineering Explained)","Principal por ser introdutório e direto. Em inglês.",1,yt("1PxcF_hwyu4"),"P","YouTube"),
+ st_("vídeo","Construction Claim Types Explained","Classifica os tipos de pedido. Útil para o seu glossário.",1,yt("bYJ3eccpMRY"),"P","YouTube"),
+ st_("exercício","Matriz de notificações e prazos do seu contrato (evento, prazo, destinatário, forma)","Primeiro entregável do dossiê final.",2,null,"",""),
+ st_("vídeo","Alternativa: Cause of Claim in Construction","Foco em causas de pedido.",0,yt("hDs9j0dIe1g"),"A","YouTube"),
+ st_("curso","Complemento FGV: Gestão de Disputas em Projetos de Infraestrutura (16 horas-aula)","Curso curto voltado a claims e disputas em infraestrutura. Pago, fora das 100 h; confirme a próxima turma.",0,D("https://educacao-executiva.fgv.br/produto/gestao-de-disputas-em-projetos-de-infraestrutura-aspectos-teoricos-e-praticos-01tV200000Ij5RNIAZ"),"A","FGV")
+ ],
+ q:["Qual o prazo de notificação do seu contrato e que evento o dispara?","Que registros contemporâneos provam a causa do atraso?","Quem assina e aprova uma ordem de mudança no seu contrato?"]},
+
+{n:5,t:"Cronograma e CPM: a base comum",h:7,goal:"Qualidade do cronograma, lógica, caminho crítico e folga. Análise de atraso sobre cronograma ruim produz número ruim.",
+ intro:[
+ "O caminho crítico é a sequência de atividades que define a data final. Atrasar uma atividade crítica atrasa a obra. Folga total é quanto uma atividade pode atrasar sem atrasar o término; folga livre é quanto pode atrasar sem atrasar a sucessora.",
+ "Antes de qualquer análise, audite o cronograma: lógica aberta (atividades sem predecessora ou sucessora), restrições de data que forçam o caminho crítico, folga negativa, calendários inconsistentes e relações em excesso. Cada defeito dá ao outro lado um argumento contra a sua análise.",
+ "A AACE publica práticas recomendadas para isso: lógica das atividades (RP 24R-03), identificação do caminho crítico (49R-06), documentação da base do cronograma (38R-06) e níveis de detalhe (37R-06). O PMI complementa com o Practice Standard for Scheduling."],
+ steps:[
+ st_("vídeo","01) Caminho Crítico: a espinha dorsal do planejamento de obras","Principal por ser em português e aplicado a obras.",1,yt("ERoXpTUBnfM"),"P","YouTube"),
+ st_("norma","PMI, Practice Standard for Scheduling, 3ª ed.","Confirme se a edição alinha ao PMBOK 6 ou 7 na página do PMI.",3,D("https://www.pmi.org/pt-br/standards/scheduling-third-edition"),"P","PMI"),
+ st_("norma","AACE RP 24R-03, 49R-06, 38R-06 e 37R-06","Práticas recomendadas de cronograma. Acesso por membro ou compra.",2,WB("AACE International recommended practice 49R-06 identifying the critical path"),"P","AACE"),
+ st_("exercício","Auditar um cronograma real: lógica aberta, restrições, folga negativa, calendários","Gere um relatório de 1 página com os defeitos e o que cada um significa para a análise.",1,null,"",""),
+ st_("vídeo","Alternativa: Caminho Crítico, a estratégia que evita atrasos nas obras","Outra explicação aplicada a obras.",0,yt("-slyxuFpSl0"),"A","YouTube"),
+ st_("vídeo","Alternativa: Aula de Diagrama de Redes, PERT, CPM e MDP (parte 2)","Aula de gestão de projetos que trata de folga total. Mais teórica.",0,yt("4WNOb48tLeg"),"A","YouTube"),
+ st_("livro","Opcional: Planejamento e Controle de Obras (Aldo Dórea Mattos)","Referência brasileira de planejamento de obras. Confirme a edição.",0,BK("Planejamento e Controle de Obras Aldo Dórea Mattos"),"A","busca de livros")
+ ],
+ q:["O que diferencia folga total de folga livre?","Quais defeitos de lógica invalidam um cronograma como base de análise?","Como restrições de data distorcem o caminho crítico?"]},
+
+{n:6,t:"Análise de atraso: AACE RP 29R-03",h:16,goal:"Os nove métodos, como escolher entre eles e como aplicar a um caso real. Núcleo técnico do curso.",
+ intro:[
+ "A RP 29R-03 descreve nove métodos de análise forense de cronograma, os MIPs 3.1 a 3.9, e os fatores para escolher entre eles. A norma não manda usar um método; exige que a escolha seja justificada. Ela foi publicada em 2007 e revisada em 2009 e 2011, e há rascunho de atualização em discussão: confirme a versão vigente no site da AACE.",
+ "Os nove métodos, na ordem da norma: 3.1 observacional, estático, bruto (planejado contra realizado); 3.2 observacional, estático, periódico; 3.3 observacional, dinâmico, contemporâneo como está; 3.4 observacional, dinâmico, contemporâneo dividido; 3.5 observacional, dinâmico, modificado ou recriado; 3.6 modelado, aditivo, base única; 3.7 modelado, aditivo, bases múltiplas; 3.8 modelado, subtrativo, simulação única; 3.9 modelado, subtrativo, bases múltiplas.",
+ "Como ler a classificação: observacional compara cronogramas sem inserir ou retirar atrasos; modelado simula. Estático usa duas fotografias; dinâmico usa a sequência de atualizações. Aditivo insere os atrasos num cronograma; subtrativo os retira do cronograma real (o clássico collapsed as-built).",
+ "Posição prática: se o seu projeto tem atualizações mensais confiáveis, o método por janelas (observacional dinâmico) costuma ser o mais defensável. Se não tem, a escolha passa a ser um problema de dados, não de método. A crítica comum aos métodos modelados é a dependência de premissas do analista."],
+ steps:[
+ st_("pdf","Sumário da RP 29R-03","Mostra a estrutura dos nove métodos. É o único trecho público que localizei.",1,D("https://web.aacei.org/docs/default-source/toc/toc_29r-03.pdf?sfvrsn=4"),"P","AACE"),
+ st_("norma","RP 29R-03 completa (membro ou compra no site da AACE)","Leia com atenção os fatores de escolha do método.",5,WB("AACE 29R-03 Forensic Schedule Analysis recommended practice purchase"),"P","AACE · pago"),
+ st_("vídeo","How to Apply Forensic Schedule Analysis, as per AACE","Principal por tratar da aplicação da norma. Em inglês; não assisti, o título indica o tema.",1,D("https://www.youtube.com/live/PWt0FLLmW4Y"),"P","YouTube"),
+ st_("vídeo","MIP 3.1 e 3.2: As-Planned vs As-Built","Série por método. Cobre os dois observacionais estáticos.",1,yt("IL6LQrYqgds"),"P","YouTube"),
+ st_("vídeo","MIP 3.8 e 3.9: Collapsed As-Built","Cobre os dois modelados subtrativos.",1,yt("npaJygomTl0"),"P","YouTube"),
+ st_("vídeo","Webinar AACE sobre análise forense (PathLMS)","Plataforma da própria AACE. Exige conta.",1,D("https://www.pathlms.com/aace/courses/50359/webinars/35185"),"P","AACE"),
+ st_("livro","Construction Delay Claims (Bramble e Callahan), capítulos de métodos","Referência clássica sobre análise de atraso. Confirme a edição.",3,BK("Construction Delay Claims Bramble Callahan"),"P","busca de livros"),
+ st_("exercício","Aplicar 2 métodos ao mesmo evento e justificar a escolha em 1 página","Use o cronograma que você auditou na aula 5. Compare resultados e explique a diferença.",3,null,"",""),
+ st_("vídeo","Alternativa: Your most-asked Forensic Schedule Analysis questions answered","Perguntas e respostas sobre análise forense.",0,yt("XrvRQZPlRU8"),"A","YouTube"),
+ st_("vídeo","Alternativa: Forensic Delay Analysis for Beginners","Introdução.",0,yt("dpx-7LF1vvo"),"A","YouTube"),
+ st_("vídeo","Canal Claims Village","Canal com séries sobre claims e análise de atraso. Avalie você mesmo.",0,D("https://www.youtube.com/@claimsvillage1"),"A","YouTube"),
+ st_("artigo","Crítica à revisão da 29R-03 (ENR)","Mostra o debate sobre os métodos modelados.",0,D("https://enr.com/articles/56770-forensic-schedulings-groundhog-day-dubious-practices-recommended-again"),"A","ENR"),
+ st_("curso","Meta de certificação: AACE PSP, EVP, CCP","Certificações da AACE para planejamento, valor agregado e custos. Opcional.",0,D("https://web.aacei.org/certification/certifications-offered/professional-certifications"),"A","AACE")
+ ],
+ q:["Cite os nove métodos da 29R-03 e a família a que cada um pertence.","Que qualidade de dados cada método exige e qual deles seu caso permite?","Por que um método modelado e aditivo é mais contestável que um observacional?","Quais fatores a 29R-03 manda considerar para escolher o método?"]},
+
+{n:7,t:"TIA prospectivo e atraso concorrente",h:6,goal:"Impacto de tempo prospectivo e o confronto entre a AACE e o protocolo SCL.",
+ intro:[
+ "O TIA (Time Impact Analysis) insere um evento no cronograma vigente para medir o efeito no término. A RP 52R-06 trata da versão prospectiva, feita durante a obra, para pedir prorrogação antes de o atraso se consumar.",
+ "Atraso concorrente é quando duas ou mais causas, de partes diferentes, atrasam o término no mesmo período. O tratamento varia por contrato, por jurisdição e por protocolo. O protocolo da Society of Construction Law (2ª edição, 2017) e a AACE divergem em alguns pontos; estudar a divergência é mais útil que escolher um lado.",
+ "No Brasil, a regra prática é ler o seu contrato: ele diz de quem é a folga, se há prorrogação sem custo para atraso concorrente e como se prova. O protocolo SCL não tem força de lei, a menos que o contrato o adote."],
+ steps:[
+ st_("norma","AACE RP 52R-06: Prospective Time Impact Analysis","Acesso por membro ou compra.",2,WB("AACE 52R-06 prospective time impact analysis"),"P","AACE"),
+ st_("norma","SCL Delay and Disruption Protocol, 2ª ed. (2017)","Publicado pela Society of Construction Law. Confirme na fonte oficial.",1,WB("SCL Delay and Disruption Protocol second edition 2017 scl.org.uk"),"P","SCL"),
+ st_("artigo","The SCL Delay and Disruption Protocol: a second edition","Resumo do que mudou na segunda edição.",1,D("https://www.fenwickelliott.com/research-insight/annual-review/2017/scl-delay-disruption-protocol-second-edition"),"P","Fenwick Elliott"),
+ st_("artigo","Harmonizing SCL DDP2 and AACE 29R-03","Compara os dois documentos para arbitragem internacional.",1,D("https://www.mondaq.com/unitedstates/arbitration-dispute-resolution/1702390/harmonizing-scl-dd2-and-aace-29r-03-complementary-frameworks-for-forensic-delay-analysis-in-international-arbitration"),"P","Mondaq"),
+ st_("exercício","Parecer de 2 páginas sobre atraso concorrente num caso seu","Cite o contrato, a AACE e o SCL, e diga onde eles divergem para o seu caso.",1,null,"","")
+ ],
+ q:["Quando um TIA prospectivo é melhor que uma análise retrospectiva?","Como o protocolo SCL e a AACE tratam o atraso concorrente?","De quem é a folga no seu contrato?"]},
+
+{n:8,t:"Quantum: BDI, produtividade e valor agregado",h:12,goal:"Transformar atraso e mudança em valor defensável.",
+ intro:[
+ "Quantum é o valor do pleito. Separe três componentes: custo direto da mudança, custo de atraso (manter a obra ativa por mais tempo: administração local, canteiro, equipamentos) e perda de produtividade (mesmo trabalho exigindo mais horas por interferência).",
+ "BDI: ao precificar aditivos, use o BDI do contrato e confronte com a faixa do Acórdão 2622/2013 quando o objeto for obra pública. Custo de atraso costuma estar na administração local ou nos custos indiretos, e não necessariamente no BDI.",
+ "Perda de produtividade é a parte mais difícil de provar. O método do Measured Mile compara a produtividade num trecho afetado com a de um trecho comparável sem interferência, da mesma obra. A RP 25R-03 da AACE trata da estimativa de perda de produtividade em claims. Métodos de custo total são mais fracos e exigem justificativa.",
+ "Valor agregado (EVM) compara previsto (PV), realizado em valor (EV) e custo real (AC). SPI é EV dividido por PV e mede prazo; CPI é EV dividido por AC e mede custo. É ferramenta de controle e dá sinal precoce de desvio; não prova nexo causal sozinho."],
+ steps:[
+ st_("norma","AACE RP 25R-03: estimativa de perda de produtividade em claims","Acesso por membro ou compra.",3,WB("AACE 25R-03 estimating lost labor productivity in construction claims"),"P","AACE"),
+ st_("norma","PMI, Standard for Earned Value Management (2020)","Norma atual de EVM do PMI.",2,D("https://www.pmi.org/fr-fr/standards/earned-value-management"),"P","PMI"),
+ st_("vídeo","BDI de Obras: Como Calcular Segundo o TCU (Passo a Passo)","Principal por ser em português e amarrar o BDI ao TCU.",1,yt("4KiXqW4KfhM"),"P","YouTube"),
+ st_("vídeo","Orçamento de obra pública: SINAPI, composição e BDI","Mostra a relação entre SINAPI, composição e BDI num orçamento.",1,yt("2B5WhzXi8hE"),"P","YouTube"),
+ st_("vídeo","Measured Mile","Principal para o método. Em inglês.",1,yt("AvwqHFbdmTQ"),"P","YouTube"),
+ st_("vídeo","Aula de Gestão do Valor Agregado (VA, VP, IDC, IDP, CR)","Principal para EVM por ser em português e usar os termos brasileiros.",1,yt("-RyQ-Zoaocc"),"P","YouTube"),
+ st_("exercício","Measured Mile num pacote de trabalho, com limitações explícitas","Escolha um trecho afetado e um comparável. Anote por que o comparável é comparável.",3,null,"",""),
+ st_("vídeo","Alternativa: Earned Value vs Measured Mile to Claim Loss of Productivity","Compara as duas abordagens.",0,yt("vJ4toohJNOs"),"A","YouTube"),
+ st_("vídeo","Alternativa: Loss of Productivity Claims in Construction","Visão geral dos claims de produtividade.",0,yt("iz2CJeqXigE"),"A","YouTube"),
+ st_("vídeo","Alternativa: A Administração Pública pode usar um BDI maior que o Acórdão 2622/2013?","Discute o limite do BDI de referência.",0,yt("o8pFCpXPFn0"),"A","YouTube"),
+ st_("vídeo","Alternativa: Gerenciamento do Valor Agregado (curso de orçamento de obras)","Parte de um curso de orçamento de obras.",0,yt("WZsIxyjiPyQ"),"A","YouTube")
+ ],
+ q:["Como separar custo direto, custo de atraso e perda de produtividade?","O que é o método do Measured Mile e quando ele não se aplica?","Como o BDI do contrato entra no cálculo de um aditivo?","O que o PV, EV e AC dizem sobre desvio de prazo e custo?"]},
+
+{n:9,t:"Dispute Boards no Brasil",h:10,goal:"Regras da ICC, CAM-CCBC e CBMA, Lei 14.133 e a eficácia da decisão do comitê.",
+ intro:[
+ "Dispute Board é um comitê, em geral de três profissionais, que acompanha o contrato e resolve divergências durante a obra. Nas regras da ICC de 2015 há três modelos: DRB (Dispute Review Board), que emite recomendações que só vinculam se ninguém objetar em 30 dias; DAB (Dispute Adjudication Board), que emite decisões de cumprimento imediato; e CDB (Combined Dispute Board), que combina os dois.",
+ "As regras da ICC organizam o trabalho do comitê em três serviços: prevenção de divergências (avoidance), assistência informal e referência formal para uma conclusão. A função preventiva é a que mais evita disputa. Um comitê que só se reúne quando há crise perde o principal valor.",
+ "No Brasil, a Lei 14.133 prevê meios alternativos de solução de controvérsias, incluindo comitê de resolução de disputas, nos arts. 151 a 154. Os centros CAM-CCBC e CBMA têm regulamentos próprios. A eficácia executiva da decisão de um comitê é matéria em consolidação; confirme jurisprudência atual com advogado. Um dos vídeos da busca menciona uma lei estadual do Rio Grande do Sul sobre o tema: confirme se existe e o número antes de citar.",
+ "Os vídeos em português sobre o tema são vários. Assista ao principal, depois decida se as alternativas valem seu tempo. Como o seu perfil é de administrador contratual e analista de pleito, o ponto de maior valor é preparar o material que o comitê vai ler."],
+ steps:[
+ st_("vídeo","Os Dispute Boards","Principal por ser em português e ter o tema no título. Comece por ele.",1,yt("gVjrZ_EU-74"),"P","YouTube"),
+ st_("pdf","ICC Dispute Board Rules 2015 (apêndices de 2018)","Fonte oficial. Compare DRB, DAB e CDB.",2,D("https://iccwbo.org/wp-content/uploads/sites/3/2015/09/icc-dispute-board-rules-english-version.pdf"),"P","ICC"),
+ st_("norma","Regulamentos de Dispute Boards do CAM-CCBC e do CBMA","Procure o regulamento vigente em cada centro.",2,WB("regulamento dispute board CAM-CCBC CBMA comitê de prevenção e solução de disputas"),"P","busca na web"),
+ st_("norma","Lei 14.133/2021, arts. 151 a 154: meios alternativos de resolução","Leia o texto e compare com os regulamentos.",1,D("https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2021/lei/l14133.htm"),"P","Planalto"),
+ st_("norma","Enunciados do CJF sobre Dispute Boards","Orientação doutrinária das Jornadas.",1,WB("enunciados CJF Jornada Prevenção e Solução Extrajudicial de Litígios dispute board"),"P","busca na web"),
+ st_("artigo","Jurisprudência sobre eficácia e execução de decisão de Dispute Board","Procure decisões recentes. Anote tribunal, data e tese.",1,WB("decisão dispute board STJ TJSP executividade cumprimento"),"P","busca na web"),
+ st_("livro","Chern on Dispute Boards (capítulos de procedimento)","Referência internacional. Confirme a edição.",1,BK("Chern on Dispute Boards"),"P","busca de livros"),
+ st_("exercício","Tabela ICC × CAM-CCBC × CBMA: nomeação, prazo, efeito, custo","Segundo entregável de comparação. Leve ao dossiê final.",1,null,"",""),
+ st_("vídeo","Alternativa: Dispute Boards nos Contratos de Infraestrutura","Foco em infraestrutura.",0,yt("3aDd9_E8xRQ"),"A","YouTube"),
+ st_("vídeo","Alternativa: Dispute Boards em Licitações, como funciona na Administração Pública","Foco em contratação pública.",0,yt("GopDuBimqZg"),"A","YouTube"),
+ st_("vídeo","Alternativa: Você já ouviu falar em Dispute Boards?","Introdução.",0,yt("yx97XPJu958"),"A","YouTube"),
+ st_("vídeo","Alternativa em inglês: Dispute Boards in Construction Industry","Visão internacional.",0,yt("aKsgemdkBok"),"A","YouTube"),
+ st_("norma","Opcional: DRBF, manual do Dispute Board (acesso de membro)","Manual da Dispute Resolution Board Foundation.",0,D("https://drbf.memberclicks.net/dispute-board-manual"),"A","DRBF"),
+ st_("curso","Complemento FGV: Gestão de Disputas em Projetos de Infraestrutura","Opcional e pago; fora das 100 h.",0,D("https://educacao-executiva.fgv.br/produto/gestao-de-disputas-em-projetos-de-infraestrutura-aspectos-teoricos-e-praticos-01tV200000Ij5RNIAZ"),"A","FGV")
+ ],
+ q:["Qual a diferença entre DRB, DAB e CDB nas regras da ICC?","O que a Lei 14.133 prevê sobre comitê de resolução de disputas?","Que efeito a decisão tem no seu contrato: vinculante, recomendação ou provisória?","Quando um comitê é melhor que a arbitragem direta numa obra de longo prazo?"]},
+
+{n:10,t:"Projeto final",h:14,goal:"Dossiê de um pleito real anonimizado. Critério: um sênior reproduz seus números só com o dossiê.",
+ intro:[
+ "O projeto final junta as aulas num único documento que você poderia entregar a uma contraparte, a um perito ou a um comitê de disputas. Cada entregável corresponde a uma aula: notificações (4), análise de atraso por dois métodos (5 e 6), quantum (8), manifestação (9) e lições para evitar a disputa (2 e 3).",
+ "Critério de qualidade: um terceiro reproduz seus números só com o dossiê. Anexe a base de dados, as premissas e as fontes. Anote a premissa mais frágil e como você a defenderia.",
+ "Dois cuidados. Anonimize nomes, valores e localização se o dossiê sair do seu computador. E trate o resultado como estudo, não como parecer jurídico."],
+ steps:[
+ st_("exercício","Matriz contratual de notificações e prazos","Entregável da aula 4, revisado.",2,null,"",""),
+ st_("exercício","Análise de atraso por dois métodos","Entregável da aula 6, com premissas e dados anexados.",3,null,"",""),
+ st_("exercício","Quantum: reequilíbrio, custo de atraso e produtividade","Entregável da aula 8.",3,null,"",""),
+ st_("exercício","Minuta de pleito ou manifestação ao comitê de disputas","Texto de até 5 páginas, com anexos numerados.",2,null,"",""),
+ st_("exercício","Parecer sobre risco contratual e cláusula de resolução de disputas","Identifique riscos mal alocados e proponha texto de cláusula.",2,null,"",""),
+ st_("exercício","Decisão-espelho","Escreva a decisão que um comitê imparcial poderia emitir.",1,null,"",""),
+ st_("exercício","Lições para prevenir a disputa (avoidance)","Lista de ações que teriam evitado o pleito.",1,null,"","")
+ ],
+ q:["Um terceiro consegue reproduzir seus números só com o dossiê?","Qual premissa do seu dossiê é a mais frágil e como você a defenderia?"]}
+];
+LESSONS.forEach(L=>L.steps.forEach((s,i)=>s.id="a"+L.n+"-"+i));
+
+const DIAG=[
+ {k:"d1",t:"Contrato de obra no direito privado (empreitada, risco, mudanças)",a:2},
+ {k:"d2",t:"Lei 14.133, reequilíbrio e TCU",a:3},
+ {k:"d3",t:"Notificação, registro contemporâneo e estrutura de pleito",a:4},
+ {k:"d4",t:"Cronograma e CPM (folga, caminho crítico, auditoria)",a:5},
+ {k:"d5",t:"Análise de atraso e métodos da AACE 29R-03",a:6},
+ {k:"d6",t:"Atraso concorrente e TIA",a:7},
+ {k:"d7",t:"BDI, custo de atraso e perda de produtividade",a:8},
+ {k:"d8",t:"Valor agregado (EVM)",a:8},
+ {k:"d9",t:"Dispute Boards e resolução de disputas",a:9}
 ];
 
-const KEY='pos-adm-contratual-alex-v1';
-let st={done:{},notes:{},start:'',hpw:10};
-try{const s=JSON.parse(localStorage.getItem(KEY)||'{}');if(s&&typeof s==='object')st=Object.assign(st,s)}catch(e){}
+/* ========= estado ========= */
+const KEY="pos-adm-contratual-alexis-v2";
+let st={done:{},notes:{},start:"",hpw:10,diag:{}};
+try{const s=JSON.parse(localStorage.getItem(KEY)||"{}");if(s&&typeof s==="object")st=Object.assign(st,s)}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}};
-const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-if(!st.start)st.start=iso(new Date());
-const fmt=d=>d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'});
-const KINDS=['todos','video','pdf','livro','norma','artigo','curso','exercício'];
-const LABEL={todos:'Todos',video:'Vídeo',pdf:'PDF',livro:'Livro',norma:'Norma',artigo:'Artigo',curso:'Curso','exercício':'Exercício'};
-let filter='todos';
-const root=document.getElementById('mods');
-MODS.forEach(m=>m.r.forEach((r,i)=>r.id='m'+m.n+'-'+i));
-const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
-const TOTAL=MODS.reduce((a,m)=>a+m.r.reduce((b,r)=>b+r.h,0),0);
+const isoD=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+if(!st.start)st.start=isoD(new Date());
+const fmtD=d=>d.toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric"});
+const TOTAL=LESSONS.reduce((a,L)=>a+L.steps.reduce((b,s)=>b+s.h,0),0);
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+const doneH=L=>L.steps.filter(s=>st.done[s.id]).reduce((a,s)=>a+s.h,0);
+const lessonH=L=>L.steps.reduce((a,s)=>a+s.h,0);
+const allDoneH=()=>LESSONS.reduce((a,L)=>a+doneH(L),0);
+const KL={"vídeo":"Vídeo",pdf:"PDF",livro:"Livro",norma:"Norma",artigo:"Artigo",curso:"Curso","exercício":"Exercício"};
 
 function plan(){
-  const start=new Date(st.start+'T00:00:00');
+  const start=new Date(st.start+"T00:00:00");
   const hpw=Math.max(1,Number(st.hpw)||10);
   const days=Math.floor((Date.now()-start.getTime())/86400000);
   const expected=Math.max(0,Math.min(TOTAL,days/7*hpw));
   const end=new Date(start.getTime()+Math.ceil(TOTAL/hpw)*7*86400000);
   return {start,hpw,expected,end};
 }
-function modEnd(m,p){
-  let cum=0;for(const x of MODS){cum+=x.h;if(x===m)break}
-  return new Date(p.start.getTime()+Math.ceil(cum/p.hpw)*7*86400000);
-}
-function render(){
-  const p=plan();
-  root.innerHTML='';
-  MODS.forEach(m=>{
-    const sec=document.createElement('section');sec.className='mod';sec.id='mod'+m.n;
-    const dh=m.r.filter(r=>st.done[r.id]).reduce((a,r)=>a+r.h,0);
-    sec.innerHTML=`<header><h2><span class="n">M${m.n}</span>${m.t}</h2>
-      <div class="meta"><span>${m.h} h · previsto até ${fmt(modEnd(m,p))}</span><span>${dh} / ${m.h} h</span></div>
-      <p class="goal">${m.g}</p></header>`;
-    let shown=0;
-    m.r.forEach(r=>{
-      const row=document.createElement('div');
-      const hide=filter!=='todos'&&r.k!==filter;
-      row.className='res'+(st.done[r.id]?' done':'')+(hide?' hide':'');
-      if(!hide)shown++;
-      let link='';
-      if(r.l){const d=r.l.mode==='direto';link=`<a class="go ${d?'':'alt'}" href="${r.l.u}" target="_blank" rel="noopener noreferrer">${d?'Abrir ↗':'Buscar ↗'}</a>`}
-      row.innerHTML=`<input type="checkbox" id="${r.id}" ${st.done[r.id]?'checked':''} aria-label="Marcar como feito: ${esc(r.t)}"><div class="t"><div class="ti">${r.t}</div>
-        <div class="sub"><span class="tag">${LABEL[r.k]}</span><span>${r.h?r.h+' h':'opcional'}</span>${r.s?`<span>${r.s}</span>`:''}${r.l?`<span>${r.l.mode==='direto'?'link direto':'busca pronta'}</span>`:''}</div></div>${link}`;
-      row.querySelector('input').addEventListener('change',e=>{
-        if(e.target.checked)st.done[r.id]=1;else delete st.done[r.id];
-        save();render();
-      });
-      sec.appendChild(row);
-    });
-    const qd=document.createElement('details');qd.className='x';
-    qd.innerHTML=`<summary>Fixação (${m.q.length} perguntas)</summary><ol>${m.q.map(x=>`<li>${x}</li>`).join('')}</ol><p class="hint">Responda de memória, depois confira na fonte. Sem gabarito de propósito.</p>`;
-    sec.appendChild(qd);
-    const nd=document.createElement('details');nd.className='x';
-    nd.innerHTML=`<summary>Anotações do módulo</summary><textarea id="nt${m.n}" aria-label="Anotações do módulo ${m.n}" placeholder="Sínteses, dúvidas, trechos para citar no projeto final..."></textarea>`;
-    const ta=nd.querySelector('textarea');ta.value=st.notes[m.n]||'';
-    ta.addEventListener('input',()=>{st.notes[m.n]=ta.value;save()});
-    if(st.notes[m.n])nd.open=false;
-    sec.appendChild(nd);
-    if(!shown)sec.classList.add('empty');
-    root.appendChild(sec);
-  });
-  const all=MODS.flatMap(m=>m.r);
-  const dn=all.filter(r=>st.done[r.id]).reduce((a,r)=>a+r.h,0);
-  document.getElementById('pct').innerHTML=`${dn} h <small>de ${TOTAL} h concluídas</small>`;
-  document.getElementById('fill').style.width=(dn/TOTAL*100)+'%';
-  document.getElementById('mark').style.left=(p.expected/TOTAL*100)+'%';
-  document.getElementById('cnt').textContent=all.filter(r=>st.done[r.id]&&r.h>0).length+' de '+all.filter(r=>r.h>0).length+' itens';
-  document.getElementById('endDate').textContent=fmt(p.end);
+const pad=n=>String(n).replace(".",",");
+
+/* ========= telas ========= */
+const app=document.getElementById("app");
+
+function home(){
+  const dn=allDoneH(), p=plan();
+  const next=LESSONS.find(L=>doneH(L)<lessonH(L))||LESSONS[LESSONS.length-1];
+  const C=2*Math.PI*52, off=C*(1-dn/TOTAL);
   const diff=dn-p.expected;
-  const s=document.getElementById('status');
-  if(p.expected<=0){s.className='status';s.textContent='O curso começa em '+fmt(p.start)+'. Meta: '+p.hpw+' h por semana.'}
-  else if(diff>=-0.5){s.className='status ok';s.textContent='No ritmo: meta de hoje '+p.expected.toFixed(1).replace('.',',')+' h, feitas '+dn+' h.'}
-  else{s.className='status late';s.textContent='Atrasado '+Math.abs(diff).toFixed(1).replace('.',',')+' h em relação ao plano (meta '+p.expected.toFixed(1).replace('.',',')+' h, feitas '+dn+' h). Ajuste as horas por semana ou a data de início.'}
+  let msg,cls="";
+  if(p.expected<=0)msg="O curso começa em "+fmtD(p.start)+". Meta: "+p.hpw+" h por semana.";
+  else if(diff>=-0.5){cls="ok";msg="No ritmo. Meta de hoje: "+pad(p.expected.toFixed(1))+" h. Feitas: "+pad(dn)+" h."}
+  else{cls="late";msg="Atrasado "+pad(Math.abs(diff).toFixed(1))+" h em relação ao plano (meta "+pad(p.expected.toFixed(1))+" h, feitas "+pad(dn)+" h). Ajuste as horas por semana ou a data de início."}
+  app.innerHTML=`
+  <section class="hero gut"><div class="in">
+    <div>
+      <div class="eyebrow">100 h · construção civil no Brasil</div>
+      <h1>Alexis, domine <em>prazo, custo e disputa</em> em contratos de obra.</h1>
+      <p>Dez aulas. Cada uma tem uma explicação, o vídeo principal, o texto que você precisa ler, um exercício no seu caso real e perguntas de fixação. Base: Código Civil, Lei 14.133, TCU, AACE e as regras de Dispute Boards.</p>
+      <a class="cta" href="#aula-${next.n}">${dn>0?"Continuar na aula "+next.n:"Começar pela aula 1"}</a>
+    </div>
+    <div class="ring" role="img" aria-label="${pad(dn)} de ${TOTAL} horas concluídas">
+      <svg viewBox="0 0 120 120"><circle class="tr" cx="60" cy="60" r="52" fill="none" stroke-width="9"/><circle class="fg" cx="60" cy="60" r="52" fill="none" stroke-width="9" stroke-linecap="butt" stroke-dasharray="${C}" stroke-dashoffset="${off}"/></svg>
+      <div class="c"><b>${pad(dn)} h</b><span>de ${TOTAL} h</span></div>
+    </div>
+  </div></section>
+  <div class="plan gut"><div class="in"><div class="box">
+    <div><label for="start">Início</label><input type="date" id="start" value="${st.start}"></div>
+    <div><label for="hpw">Horas por semana</label><input type="number" id="hpw" min="1" max="60" step="1" value="${st.hpw}"></div>
+    <div><label>Término previsto</label><div class="big">${fmtD(p.end)}</div></div>
+    <p class="msg ${cls}" aria-live="polite">${msg}</p>
+  </div></div></div>
+  <main class="gut"><div class="in">
+    <h2 class="sec">As aulas</h2>
+    <div class="grid">${LESSONS.map(L=>{
+      const lh=lessonH(L),d=doneH(L),pc=lh?d/lh*100:0;
+      const nv=L.steps.filter(s=>s.k==="vídeo"&&s.pick==="P").length;
+      return `<a class="card ${d>=lh&&lh?"done":""}" href="#aula-${L.n}">
+        <span class="num">${L.n}</span><h3>${L.t}</h3>
+        <div class="pb"><i style="width:${pc}%"></i></div>
+        <div class="m"><span>${pad(d)} / ${lh} h</span><span>${nv} vídeo${nv===1?"":"s"}</span></div></a>`}).join("")}
+    </div>
+    <p class="foot"><b>Como foram escolhidos os links.</b> Os vídeos foram selecionados por pesquisa: considerei o título, o idioma, a aderência a construção civil e ao tema da aula. <b>Não assisti a nenhum</b>, então a qualidade é uma aposta; se um vídeo for fraco, use as alternativas listadas na mesma aula. Botão <b>Abrir</b> leva a uma página que apareceu em pesquisa; <b>Buscar</b> abre uma pesquisa pronta porque não tenho link oficial confirmado. Normas completas da AACE e do PMI são pagas ou exclusivas de membros. O texto das aulas foi escrito por mim a partir do que conheço e do que a pesquisa trouxe: confirme na fonte antes de citar. Este painel não substitui parecer jurídico. Seu progresso fica salvo neste navegador.</p>
+  </div></main>`;
+  const si=document.getElementById("start"),hi=document.getElementById("hpw");
+  si.addEventListener("change",()=>{if(si.value){st.start=si.value;save();home();top_()}});
+  hi.addEventListener("change",()=>{st.hpw=Math.max(1,Math.min(60,Number(hi.value)||10));save();home();top_()});
 }
-const fb=document.getElementById('filters');
-KINDS.forEach(k=>{
-  const b=document.createElement('button');b.type='button';b.textContent=LABEL[k];
-  b.setAttribute('aria-pressed',k===filter);
-  b.addEventListener('click',()=>{filter=k;[...fb.children].forEach(c=>c.setAttribute('aria-pressed',c===b));render()});
-  fb.appendChild(b);
-});
-const si=document.getElementById('start'),hi=document.getElementById('hpw');
-si.value=st.start;hi.value=st.hpw;
-si.addEventListener('change',()=>{if(si.value){st.start=si.value;save();render()}});
-hi.addEventListener('change',()=>{st.hpw=Math.max(1,Math.min(60,Number(hi.value)||10));hi.value=st.hpw;save();render()});
-render();
+
+function stepHTML(s){
+  const k=s.k==="vídeo"?"v":"";
+  const link=s.l?`<a class="go ${s.l.mode==="direto"&&s.pick!=="A"?"":"alt"}" href="${s.l.u}" target="_blank" rel="noopener noreferrer">${s.k==="vídeo"?"Assistir ↗":s.l.mode==="direto"?"Abrir ↗":"Buscar ↗"}</a>`:"";
+  const pk=s.pick==="P"?`<span class="pick">Principal</span>`:s.pick==="A"?`<span class="pick alt">Alternativa</span>`:"";
+  return `<li class="step ${st.done[s.id]?"done":""} ${s.h?"":"opt"}">
+    <input class="c" type="checkbox" id="${s.id}" ${st.done[s.id]?"checked":""} aria-label="Marcar como feito: ${esc(s.t)}">
+    <div><div><span class="kind ${k}">${KL[s.k]}</span>${pk}</div>
+      <div class="tt">${s.t}</div>
+      ${s.why?`<p class="why">${s.why}</p>`:""}
+      <div class="mt"><span>${s.h?s.h+" h":"opcional, fora das 100 h"}</span>${s.src?`<span>${s.src}</span>`:""}${s.l?`<span>${s.l.mode==="direto"?"link direto":"busca pronta"}</span>`:""}</div>
+    </div>${link}</li>`;
+}
+
+function diagHTML(){
+  const rated=DIAG.filter(d=>st.diag[d.k]);
+  let res=`<p class="hint">Dê uma nota de 1 (nunca vi) a 5 (faço sozinho) para cada competência. O resultado aparece quando as nove tiverem nota.</p>`;
+  if(rated.length===DIAG.length){
+    const sorted=[...DIAG].sort((a,b)=>st.diag[a.k]-st.diag[b.k]);
+    const low=sorted.slice(0,3);
+    const avg=(DIAG.reduce((a,d)=>a+st.diag[d.k],0)/DIAG.length).toFixed(1).replace(".",",");
+    res=`<div class="res"><b>Média: ${avg} de 5.</b> Reforce primeiro: ${low.map(d=>`<a href="#aula-${d.a}">aula ${d.a}</a> (${d.t.split(" (")[0].toLowerCase()}, nota ${st.diag[d.k]})`).join("; ")}. Reserve mais tempo nelas e passe rápido pelas de nota 4 ou 5. Se a análise de atraso (aula 6) ficou abaixo de 3, não corte nada dela: é o núcleo do curso.</div>`;
+  }
+  return `<div class="aula" style="margin-top:1rem"><h2>Diagnóstico das 9 competências</h2>
+  <div class="diag">${DIAG.map(d=>`<div class="dr"><span>${d.t}</span><div class="sc" role="group" aria-label="Nota para ${esc(d.t)}">${[1,2,3,4,5].map(n=>`<button type="button" data-k="${d.k}" data-v="${n}" aria-pressed="${st.diag[d.k]===n}">${n}</button>`).join("")}</div></div>`).join("")}</div>${res}</div>`;
+}
+
+function lesson(n){
+  const L=LESSONS.find(x=>x.n===n);if(!L){home();return}
+  const prev=LESSONS.find(x=>x.n===n-1),nx=LESSONS.find(x=>x.n===n+1);
+  const nv=L.steps.filter(s=>s.k==="vídeo"&&s.h).length;
+  const nr=L.steps.filter(s=>["pdf","livro","norma","artigo"].includes(s.k)&&s.h).length;
+  const ne=L.steps.filter(s=>s.k==="exercício").length;
+  app.innerHTML=`
+  <section class="lh gut"><div class="in">
+    <a class="back" href="#">← todas as aulas</a>
+    <h1><span class="n">${L.n}</span>${L.t}</h1>
+    <p>${L.goal}</p>
+    <div class="chips"><span class="chip">${lessonH(L)} h</span><span class="chip">${nv} vídeo${nv===1?"":"s"}</span><span class="chip">${nr} leitura${nr===1?"":"s"}</span><span class="chip">${ne} exercício${ne===1?"":"s"}</span><span class="chip">${pad(doneH(L))} h feitas</span></div>
+  </div></section>
+  <main class="gut body"><div class="in">
+    <div class="aula"><h2>A aula</h2>${L.intro.map(p=>`<p>${p}</p>`).join("")}</div>
+    ${n===1?diagHTML():""}
+    <h2 class="sub">Roteiro de estudo</h2>
+    <ol class="steps">${L.steps.map(stepHTML).join("")}</ol>
+    <details class="blk"><summary>Fixação: ${L.q.length} perguntas</summary><div><ol>${L.q.map(q=>`<li>${q}</li>`).join("")}</ol><p class="hint">Responda de memória, depois confira na fonte. Sem gabarito de propósito.</p></div></details>
+    <details class="blk"><summary>Minhas anotações</summary><div><textarea id="nt" aria-label="Anotações da aula ${L.n}" placeholder="Sínteses, dúvidas, trechos para citar no projeto final..."></textarea></div></details>
+    <nav class="pn">${prev?`<a href="#aula-${prev.n}"><small>← anterior</small>Aula ${prev.n}: ${prev.t}</a>`:`<a href="#"><small>← início</small>Todas as aulas</a>`}${nx?`<a class="r" href="#aula-${nx.n}"><small>próxima →</small>Aula ${nx.n}: ${nx.t}</a>`:`<a class="r" href="#"><small>fim →</small>Todas as aulas</a>`}</nav>
+  </div></main>`;
+  app.querySelectorAll(".step .c").forEach(cb=>cb.addEventListener("change",e=>{
+    if(e.target.checked)st.done[e.target.id]=1;else delete st.done[e.target.id];
+    save();const y=window.scrollY;lesson(n);top_();window.scrollTo(0,y)}));
+  app.querySelectorAll(".sc button").forEach(b=>b.addEventListener("click",()=>{
+    st.diag[b.dataset.k]=Number(b.dataset.v);save();const y=window.scrollY;lesson(n);window.scrollTo(0,y)}));
+  const ta=document.getElementById("nt");ta.value=st.notes[n]||"";
+  ta.addEventListener("input",()=>{st.notes[n]=ta.value;save()});
+}
+
+function top_(){document.getElementById("topst").textContent=pad(allDoneH())+" / "+TOTAL+" h"}
+function route(){
+  const m=/^#aula-(\d+)$/.exec(location.hash);
+  if(m)lesson(Number(m[1]));else home();
+  top_();window.scrollTo(0,0);
+}
+window.addEventListener("hashchange",route);
+route();
 </script>
