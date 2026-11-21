@@ -132,6 +132,49 @@ h2.sec{font:700 1.5rem var(--f-display);margin:2.5rem 0 1rem;letter-spacing:-.01
 .vl{margin:.6rem 0 0;font-size:.88rem;line-height:1.45}
 .vl a{color:var(--link)} .vl .vm{display:block;font:400 .72rem var(--f-mono);color:var(--muted)}
 .vl.none{color:var(--muted);font-style:italic}
+.bl{color:var(--hero-fg);text-decoration:none;font:600 .85rem var(--f-body);border:1px solid rgba(255,255,255,.3);border-radius:4px;padding:.3rem .7rem}
+.bl:hover{background:rgba(255,255,255,.12)}
+.bar .rt{display:flex;gap:.8rem;align-items:center}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.8rem}
+.opt{text-align:left;background:var(--surface);color:var(--fg);border:2px solid var(--line);border-radius:6px;padding:1rem 1.1rem;cursor:pointer}
+.opt:hover{border-color:var(--fg)}
+.opt[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset}
+.opt b{display:block;font:800 1.5rem/1.1 var(--f-display)}
+.opt .n{display:block;font:500 .8rem var(--f-mono);color:var(--muted);margin-top:.3rem}
+.opt .tag2{display:inline-block;margin-top:.5rem;font:600 .68rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;border-radius:3px;padding:.1rem .45rem;background:var(--chip)}
+.opt .tag2.ok{background:var(--ok);color:var(--bg)}
+.opt .tag2.warn{background:var(--warn);color:var(--bg)}
+.setg{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1rem;align-items:end;margin-top:1rem}
+.setg label{display:block;font:500 .7rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem}
+.setg input{width:100%;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:.5rem .6rem}
+.dsel{display:flex;flex-wrap:wrap;gap:.4rem}
+.dsel button{min-width:3rem;padding:.45rem .6rem;border-radius:4px;border:1px solid var(--line);background:var(--bg);color:var(--fg);cursor:pointer;font:600 .85rem var(--f-body)}
+.dsel button[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.today{background:var(--surface);border:2px solid var(--accent);border-radius:6px;padding:1.2rem 1.3rem;margin-top:1.2rem}
+.today h2{font:700 1.3rem var(--f-display);margin:0 0 .2rem}
+.dayc{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:.9rem 1.1rem;margin-top:.7rem}
+.dayc.is-today{border-color:var(--accent);border-width:2px}
+.dayc .dh{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.3rem 1rem;align-items:baseline}
+.dayc .dh b{font:700 1rem var(--f-display)}
+.dayc .dh span{font:500 .78rem var(--f-mono);color:var(--muted)}
+.dayc .hot{color:var(--warn)}
+.tk{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:.2rem .7rem;align-items:center;padding:.5rem 0;border-top:1px solid var(--line)}
+.tk:first-of-type{border-top:0}
+.tk input{width:1.2rem;height:1.2rem;accent-color:var(--ok);margin:0}
+.tk .tn{overflow-wrap:anywhere;font-size:.93rem}
+.tk .tn small{display:block;font:400 .72rem var(--f-mono);color:var(--muted)}
+.tk a{font:600 .8rem var(--f-body);text-decoration:none;color:var(--link);white-space:nowrap}
+.tk.dn .tn{text-decoration:line-through;color:var(--muted)}
+.gc{font:500 .74rem var(--f-mono);color:var(--link);margin-left:.6rem}
+.wk{margin-top:1rem}
+.wk>summary{cursor:pointer;font:700 1.05rem var(--f-display);padding:.4rem 0}
+.agm{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:1.1rem 1.3rem;margin-top:1rem}
+.agm p{margin:.4rem 0;color:var(--muted);font-size:.93rem}
+.agm .ok{color:var(--ok)} .agm .late{color:var(--warn)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.8rem;margin-top:1rem}
+.stats div{background:var(--bg);border-radius:6px;padding:.7rem .9rem}
+.stats label{display:block;font:500 .68rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.stats b{font:700 1.2rem var(--f-display)}
 .aula ul{max-width:68ch;margin:.5rem 0;padding-left:1.2rem}
 .aula li{margin:.3rem 0}
 .aula h2:not(:first-child){margin-top:1.5rem}
@@ -173,7 +216,7 @@ h2.sec{font:700 1.5rem var(--f-display);margin:2.5rem 0 1rem;letter-spacing:-.01
 
 <div class="bar gut"><div class="in">
   <a class="brand" href="#"><i>PAC</i><span>Pós em Administração Contratual</span></a>
-  <span class="st" id="topst"></span>
+  <div class="rt"><a class="bl" href="#agenda">Agenda</a><span class="st" id="topst"></span></div>
 </div></div>
 <div id="app"></div>
 
@@ -221,7 +264,7 @@ const SEEN={};
 
 /* ========= estado ========= */
 const KEY="pos-adm-contratual-alexis-v3";
-let st={done:{},notes:{},start:"",hpw:10,diag:{}};
+let st={done:{},notes:{},start:"",hpw:10,diag:{},plan:null,log:{}};
 try{const s=JSON.parse(localStorage.getItem(KEY)||"{}");if(s&&typeof s==="object")st=Object.assign(st,s)}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}};
 const isoD=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
@@ -243,18 +286,131 @@ function plan(){
   return {start,hpw,expected,end};
 }
 
+/* ========= agenda ========= */
+const STEPS={};LESSONS.forEach(L=>L.steps.forEach(x=>{STEPS[x.id]=x}));
+const DOW=["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"];
+const DOWS=["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
+const COURSE_URL="https://claude.ai/artifact/Gokf1K3UJTRPK3MNy1SqFL";
+const DEFPLAN={months:3,start:"",days:[1,2,3,4,6,0],tw:"19:00",tsat:"09:00",tsun:"09:00"};
+const startOf=iso=>new Date(iso+"T00:00:00");
+const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
+const addMonths=(d,m)=>{const x=new Date(d);x.setMonth(x.getMonth()+m);return x};
+const p2=n=>String(n).padStart(2,"0");
+const toMin=t=>{const a=String(t||"19:00").split(":").map(Number);return (a[0]||0)*60+(a[1]||0)};
+const fmtT=m=>p2(Math.floor(m/60)%24)+":"+p2(m%60);
+const t12=m=>{const h=Math.floor(m/60)%24;return ((h%12)||12)+":"+p2(m%60)+" "+(h>=12?"PM":"AM")};
+const hh=h=>{const m=Math.round(h*60);const a=Math.floor(m/60),b=m%60;return a&&b?a+" h "+b+" min":a?a+" h":b+" min"};
+const dayName=d=>DOW[d.getDay()]+", "+p2(d.getDate())+"/"+p2(d.getMonth()+1);
+
+function setDone(id,checked){
+  const x=STEPS[id];if(!x)return;
+  if(checked)st.done[id]=1;else delete st.done[id];
+  const k=isoD(new Date());st.log=st.log||{};
+  const v=Math.max(0,(st.log[k]||0)+(checked?x.h:-x.h));
+  if(v)st.log[k]=v;else delete st.log[k];
+  save();
+}
+function queue(){
+  const q=[];
+  LESSONS.forEach(L=>{
+    L.steps.filter(x=>x.h>0).forEach(x=>q.push({id:x.id,t:x.t,k:x.k,h:x.h,u:x.u,n:L.n,done:!!st.done[x.id]}));
+    q.push({id:"r"+L.n,t:"Escrever o resumo da aula "+L.n,k:"resumo",h:0.25,u:null,n:L.n,done:words(st.notes[L.n])>=30,resumo:true});
+  });
+  return q;
+}
+function planOf(m){const pl=Object.assign({},DEFPLAN,st.plan||{});if(m)pl.months=m;if(!pl.start)pl.start=isoD(new Date());return pl}
+function buildAgenda(pl){
+  const today=startOf(isoD(new Date()));
+  const start=startOf(pl.start),end=addDays(addMonths(start,pl.months),-1);
+  const from=today>start?today:start;
+  const days=[];
+  for(let d=new Date(from);d<=end;d=addDays(d,1)){
+    if(pl.days.includes(d.getDay())){const g=d.getDay();days.push({date:new Date(d),w:g===6?2:g===0?1.5:1})}
+  }
+  const rem=queue().filter(x=>!x.done);
+  const Hrem=rem.reduce((a,x)=>a+x.h,0);
+  const W=days.reduce((a,d)=>a+d.w,0);
+  const h0=W?Hrem/W:0;
+  let i=0,left=rem.length?rem[0].h:0;
+  const out=[];let cumW=0,alloc=0;
+  days.forEach((d,idx)=>{
+    const last=idx===days.length-1;
+    cumW+=d.w;
+    const target=last?Hrem:Math.round(Hrem*cumW/W*4)/4;
+    let budget=last?1e9:Math.max(0,target-alloc);
+    const entries=[];let used=0;
+    while(i<rem.length&&budget>1e-6){
+      const t=rem[i];const cont0=left<t.h-1e-9;const take=Math.min(budget,left);
+      entries.push({t,part:take,fromPrev:cont0,toNext:take<left-1e-9});
+      budget-=take;used+=take;left-=take;
+      if(left<=1e-9){i++;left=i<rem.length?rem[i].h:0}
+    }
+    alloc+=used;
+    out.push({date:d.date,w:d.w,hours:used,entries});
+  });
+  return {days:out,Hrem,h0,W,start,end,empty:!days.length};
+}
+function blocksFor(day,pl){
+  const g=day.date.getDay();const s0=toMin(g===6?pl.tsat:g===0?pl.tsun:pl.tw);
+  const MAX=150;let mins=Math.round(day.hours*60);const bl=[];
+  if(g===6||g===0){
+    const a=Math.min(mins,MAX);bl.push([s0,s0+a]);mins-=a;
+    if(mins>0){const b=Math.min(mins,MAX);const s2=Math.max(toMin("14:00"),s0+a+30);bl.push([s2,s2+b]);mins-=b}
+    if(mins>0){const s3=bl[1][1]+30;bl.push([s3,s3+mins])}
+  }else bl.push([s0,s0+mins]);
+  return bl;
+}
+function level(h){return h<=1.25?["tranquilo","ok"]:h<=2.25?["firme",""]:["puxado","warn"]}
+function streak(){
+  const lg=x=>st.log&&st.log[isoD(x)]>0;
+  const pl=planOf();const sd=x=>pl.days.includes(x.getDay());
+  let n=0,d=startOf(isoD(new Date()));
+  if(!lg(d))d=addDays(d,-1);
+  for(let i=0;i<400;i++){if(lg(d))n++;else if(sd(d))break;d=addDays(d,-1)}
+  return n;
+}
+function gcal(day,b,desc){
+  const f=m=>day.date.getFullYear()+p2(day.date.getMonth()+1)+p2(day.date.getDate())+"T"+p2(Math.floor(m/60)%24)+p2(m%60)+"00";
+  return "https://calendar.google.com/calendar/render?action=TEMPLATE&text="+encodeURIComponent("Estudo: Pós em Administração Contratual")+"&dates="+f(b[0])+"/"+f(b[1])+"&details="+encodeURIComponent(desc);
+}
+const dayDesc=day=>day.entries.map(e=>"- "+e.t.t+" ("+hh(e.part)+")").join("\n")+"\n\nCurso: "+COURSE_URL+"#agenda";
+async function exportCsv(ag,pl){
+  let dl=null;
+  try{dl=window.claude&&window.claude.use?await window.claude.use("downloads"):null}catch(e){dl=null}
+  const msg=document.getElementById("csvmsg");
+  if(!dl){if(msg)msg.textContent="O download não está disponível nesta tela. Use os links \"Adicionar ao Google Calendar\" de cada dia.";return}
+  const q=v=>'"'+String(v).replace(/"/g,'""')+'"';
+  const rows=[["Subject","Start Date","Start Time","End Date","End Time","All Day Event","Description","Location","Private"].join(",")];
+  ag.days.filter(d=>d.hours>0).forEach(d=>{
+    const ds=p2(d.date.getMonth()+1)+"/"+p2(d.date.getDate())+"/"+d.date.getFullYear();
+    blocksFor(d,pl).forEach(b=>rows.push([q("Estudo: Pós em Administração Contratual"),ds,t12(b[0]),ds,t12(b[1]),"False",q(dayDesc(d)),q(COURSE_URL),"True"].join(",")));
+  });
+  try{await dl.save({filename:"agenda-pos-administracao-contratual.csv",data:rows.join("\n")});if(msg)msg.textContent="Arquivo gerado. No Google Agenda: Configurações, Importar e exportar, Importar."}
+  catch(e){if(msg)msg.textContent=(e&&e.code==="declined")?"Download cancelado.":"Não foi possível gerar o arquivo agora."}
+}
+
 /* ========= telas ========= */
 const app=document.getElementById("app");
 
+function planBox(){
+  const nres=LESSONS.filter(L=>words(st.notes[L.n])>=30).length;
+  if(!st.plan)return `<div style="grid-column:1/-1"><div class="big">Monte a sua rotina</div><p class="msg">Escolha em quantos meses quer concluir as 100 horas. O curso monta uma agenda diária, com horários depois do seu expediente (7h às 17h) e blocos maiores no fim de semana.</p></div><a class="go" href="#agenda" style="justify-self:start">Montar minha agenda →</a><div><label>Resumos escritos</label><div class="big">${nres} de ${LESSONS.length}</div></div>`;
+  const pl=planOf(),ag=buildAgenda(pl);
+  const td=ag.days.find(d=>isoD(d.date)===isoD(new Date()));
+  const hoje=td&&td.hours>0?blocksFor(td,pl).map(b=>fmtT(b[0])+" às "+fmtT(b[1])).join(" e ")+" ("+hh(td.hours)+")":(ag.empty?"Prazo encerrado":"Dia de descanso");
+  const lv=level(ag.h0);
+  return `<div><label>Plano</label><div class="big">${pl.months} ${pl.months===1?"mês":"meses"}</div></div>
+    <div><label>Hoje</label><div class="big" style="font-size:1rem">${hoje}</div></div>
+    <div><label>Sequência</label><div class="big">${streak()} ${streak()===1?"dia":"dias"}</div></div>
+    <div><label>Resumos escritos</label><div class="big">${nres} de ${LESSONS.length}</div></div>
+    <p class="msg ${lv[1]==="warn"?"late":"ok"}">Faltam ${pad(ag.Hrem.toFixed(1))} h (com os resumos) até ${fmtD(ag.end)}: cerca de ${pad(ag.h0.toFixed(1))} h por dia útil. Ritmo ${lv[0]}.</p>
+    <a class="go" href="#agenda" style="justify-self:start">Abrir agenda →</a>`;
+}
+
 function home(){
-  const dn=allDoneH(), p=plan();
+  const dn=allDoneH();
   const next=LESSONS.find(L=>doneH(L)<L.h)||LESSONS[LESSONS.length-1];
   const C=2*Math.PI*52, off=C*(1-dn/TOTAL);
-  const diff=dn-p.expected;
-  let msg,cls="";
-  if(p.expected<=0)msg="O curso começa em "+fmtD(p.start)+". Meta: "+p.hpw+" h por semana.";
-  else if(diff>=-0.5){cls="ok";msg="No ritmo. Meta de hoje: "+pad(p.expected.toFixed(1))+" h. Feitas: "+pad(dn)+" h."}
-  else{cls="late";msg="Atrasado "+pad(Math.abs(diff).toFixed(1))+" h em relação ao plano (meta "+pad(p.expected.toFixed(1))+" h, feitas "+pad(dn)+" h). Ajuste as horas por semana ou a data de início."}
   const nres=LESSONS.filter(L=>words(st.notes[L.n])>=30).length;
   app.innerHTML=`
   <section class="hero gut"><div class="in">
@@ -269,13 +425,7 @@ function home(){
       <div class="c"><b>${pad(dn)} h</b><span>de ${TOTAL} h</span></div>
     </div>
   </div></section>
-  <div class="plan gut"><div class="in"><div class="box">
-    <div><label for="start">Início</label><input type="date" id="start" value="${st.start}"></div>
-    <div><label for="hpw">Horas por semana</label><input type="number" id="hpw" min="1" max="60" step="1" value="${st.hpw}"></div>
-    <div><label>Término previsto</label><div class="big">${fmtD(p.end)}</div></div>
-    <div><label>Resumos escritos</label><div class="big">${nres} de ${LESSONS.length}</div></div>
-    <p class="msg ${cls}" aria-live="polite">${msg}</p>
-  </div></div></div>
+  <div class="plan gut"><div class="in"><div class="box">${planBox()}</div></div></div>
   <main class="gut"><div class="in">
     <h2 class="sec">As aulas</h2>
     <div class="grid">${LESSONS.map(L=>{
@@ -289,11 +439,8 @@ function home(){
     </div>
     <h2 class="sec">Textos técnicos das aulas</h2>
     <div class="pdfs">${LESSONS.map(L=>`<a href="#texto-${L.n}">Aula ${L.n}: ${L.t}<small>Texto da aula, abre aqui</small></a>`).join("")}</div>
-    <p class="foot"><b>Como foram escolhidos os vídeos.</b> Só entram vídeos com mais de 10 mil visualizações, publicados há no máximo 2 anos (depois de 21/11/2024), com pelo menos 10 minutos, em qualquer idioma. Conferi as visualizações e a data em 21/11/2026, direto nas páginas do YouTube; esses números mudam. Não assisti aos vídeos: escolhi pelo tema e pelo título. Para vários temas não há nenhum vídeo que passe no filtro, e a página diz isso. Os botões abrem páginas diretas; os links das leituras não foram abertos por dentro. Textos completos da AACE e livros são pagos ou exclusivos de membros: quando não há texto público, a aula leva ao sumário, a materiais da própria AACE ou a análises de terceiros, e diz isso. O texto das aulas foi escrito por mim a partir do que conheço e do que a pesquisa trouxe: confirme na fonte antes de citar. Este painel não substitui parecer jurídico. Os textos das técnicas e das aulas foram escritos por mim para este curso, a partir de conhecimento geral e dos materiais indicados; não são cópias de normas. Seu progresso e seus resumos ficam salvos só neste navegador.</p>
+    <p class="foot"><b>Como foram escolhidos os vídeos.</b> Só entram vídeos com mais de 10 mil visualizações, publicados há no máximo 2 anos (depois de 21/11/2024), com pelo menos 10 minutos, em qualquer idioma. Conferi as visualizações e a data em 21/11/2026, direto nas páginas do YouTube; esses números mudam. Não assisti aos vídeos: escolhi pelo tema e pelo título. Para vários temas não há nenhum vídeo que passe no filtro, e a página diz isso. Os botões abrem páginas diretas; os links das leituras não foram abertos por dentro. Textos completos da AACE e livros são pagos ou exclusivos de membros: quando não há texto público, a aula leva ao sumário, a materiais da própria AACE ou a análises de terceiros, e diz isso. O texto das aulas foi escrito por mim a partir do que conheço e do que a pesquisa trouxe: confirme na fonte antes de citar. Este painel não substitui parecer jurídico. Os textos das técnicas e das aulas foram escritos por mim para este curso, a partir de conhecimento geral e dos materiais indicados; não são cópias de normas. Seu progresso, seus resumos e o plano da agenda ficam salvos só neste navegador. A agenda não envia lembretes sozinha: para alarmes no celular, importe o CSV no Google Agenda.</p>
   </div></main>`;
-  const si=document.getElementById("start"),hi=document.getElementById("hpw");
-  si.addEventListener("change",()=>{if(si.value){st.start=si.value;save();home();top_()}});
-  hi.addEventListener("change",()=>{st.hpw=Math.max(1,Math.min(60,Number(hi.value)||10));save();home();top_()});
 }
 
 function stepHTML(s){
@@ -394,8 +541,8 @@ function lesson(n){
     <nav class="pn">${prev?`<a href="#aula-${prev.n}"><small>← anterior</small>Aula ${prev.n}: ${prev.t}</a>`:`<a href="#"><small>← início</small>Todas as aulas</a>`}${nx?`<a class="r" href="#aula-${nx.n}"><small>próxima →</small>Aula ${nx.n}: ${nx.t}</a>`:`<a class="r" href="#"><small>fim →</small>Todas as aulas</a>`}</nav>
   </div></main>`;
   app.querySelectorAll("input.c").forEach(cb=>cb.addEventListener("change",e=>{
-    if(e.target.checked)st.done[e.target.id]=1;else delete st.done[e.target.id];
-    save();const y=window.scrollY;lesson(n);top_();window.scrollTo(0,y)}));
+    setDone(e.target.id,e.target.checked);
+    const y=window.scrollY;lesson(n);top_();window.scrollTo(0,y)}));
   app.querySelectorAll(".sc button").forEach(b=>b.addEventListener("click",()=>{
     st.diag[b.dataset.k]=Number(b.dataset.v);save();const y=window.scrollY;lesson(n);window.scrollTo(0,y)}));
   const ta=document.getElementById("nt"),wc=document.getElementById("wc");
@@ -405,12 +552,74 @@ function lesson(n){
   ta.addEventListener("input",()=>{st.notes[n]=ta.value;save();upd()});
 }
 
+function agendaPage(){
+  const has=!!st.plan;
+  const pl=planOf();
+  const opts=[1,2,3,4].map(m=>{const a=buildAgenda(planOf(m));const lv=level(a.h0);return {m,a,lv}});
+  const ag=buildAgenda(pl);
+  const todayIso=isoD(new Date());
+  const optsHTML=`<div class="opts">${opts.map(o=>`<button type="button" class="opt" data-m="${o.m}" aria-pressed="${has&&pl.months===o.m}"><b>${o.m} ${o.m===1?"mês":"meses"}</b><span class="n">${o.a.empty?"sem dias de estudo":"≈ "+pad(o.a.h0.toFixed(1))+" h por dia útil · "+pad((o.a.h0*2).toFixed(1))+" h no sábado"}</span><span class="tag2 ${o.lv[1]}">${o.lv[0]}${o.m===3?" · recomendado":""}</span></button>`).join("")}</div>`;
+  let body="";
+  if(has){
+    const wk={};
+    ag.days.forEach(d=>{const mon=addDays(d.date,-((d.date.getDay()+6)%7));const k=isoD(mon);(wk[k]=wk[k]||[]).push(d)});
+    const dayHTML=d=>{
+      const bl=blocksFor(d,pl);const isT=isoD(d.date)===todayIso;const hot=d.w===1&&d.hours>3;
+      const desc=dayDesc(d);
+      return `<div class="dayc ${isT?"is-today":""}"><div class="dh"><b>${isT?"Hoje, ":""}${dayName(d.date)}</b><span class="${hot?"hot":""}">${bl.map(b=>fmtT(b[0])+"–"+fmtT(b[1])).join(" e ")} · ${hh(d.hours)}${hot?" · difícil de caber à noite":""}</span></div>
+      ${d.entries.map(e=>{const x=e.t;const ext=x.u&&!x.u.startsWith("#");const link=ext?`<a href="${x.u}" target="_blank" rel="noopener noreferrer">Abrir ↗</a>`:`<a href="#aula-${x.n}">Aula ${x.n} →</a>`;
+        const box=x.resumo?`<input type="checkbox" disabled ${x.done?"checked":""} aria-label="Resumo">`:`<input type="checkbox" data-id="${x.id}" ${x.done?"checked":""} ${e.toNext?"disabled":""} aria-label="Concluir: ${esc(x.t)}">`;
+        return `<div class="tk ${x.done?"dn":""}">${box}<div class="tn">${x.t}<small>Aula ${x.n} · ${KL[x.k]||x.k} · ${hh(e.part)}${e.fromPrev?" · continuação":""}${e.toNext?" · continua no próximo dia":""}</small></div>${link}</div>`}).join("")}
+      <p style="margin:.6rem 0 0">${bl.map((b,i)=>`<a class="gc" href="${gcal(d,b,desc)}" target="_blank" rel="noopener noreferrer">Adicionar ${bl.length>1?"bloco "+(i+1):"este bloco"} ao Google Agenda ↗</a>`).join("")}</p></div>`};
+    const todayDay=ag.days.find(d=>isoD(d.date)===todayIso);
+    const weeks=Object.keys(wk).sort();
+    body=`
+    <div class="today"><h2>${todayDay&&todayDay.hours>0?"Hoje":"Hoje: descanso"}</h2>
+      ${todayDay&&todayDay.hours>0?dayHTML(todayDay):`<p class="hint">${ag.empty?"O prazo do plano terminou. Escolha um novo prazo acima.":"Hoje não é dia de estudo no seu plano. Próximo bloco: "+(ag.days.find(d=>d.hours>0)?dayName(ag.days.find(d=>d.hours>0).date):"nenhum")+"."}</p>`}</div>
+    <div class="agm"><div class="stats">
+      <div><label>Faltam</label><b>${pad(ag.Hrem.toFixed(1))} h</b></div>
+      <div><label>Término</label><b>${fmtD(ag.end)}</b></div>
+      <div><label>Dias de estudo</label><b>${ag.days.length}</b></div>
+      <div><label>Sequência</label><b>${streak()} ${streak()===1?"dia":"dias"}</b></div></div>
+      <p>${ag.h0>0?`O plano reparte as horas que faltam entre os dias que restam. Se você atrasar, a cota dos próximos dias sobe sozinha; se adiantar, ela cai. ${level(ag.h0)[1]==="warn"?"<span class=\"late\">A cota está puxada para quem trabalha até as 17h. Considere estender o prazo.</span>":"<span class=\"ok\">Cota compatível com quem trabalha das 7h às 17h.</span>"}`:""}</p>
+      <p>Inclui 15 minutos por aula para escrever o resumo (2h30 no total).</p>
+      <p><a class="go" href="#" id="csvb" style="display:inline-block">Baixar agenda para o Google Agenda (CSV)</a> <span id="csvmsg" class="hint"></span></p>
+    </div>
+    <h2 class="sub">Agenda completa</h2>
+    ${weeks.map((k,i)=>{const arr=wk[k];const a=arr[0].date,b=arr[arr.length-1].date;const h=arr.reduce((x,d)=>x+d.hours,0);return `<details class="wk" ${i<2?"open":""}><summary>Semana de ${p2(a.getDate())}/${p2(a.getMonth()+1)} a ${p2(b.getDate())}/${p2(b.getMonth()+1)} · ${hh(h)}</summary>${arr.map(dayHTML).join("")}</details>`}).join("")}`;
+  }
+  const dsel=`<div class="dsel" role="group" aria-label="Dias de estudo">${[1,2,3,4,5,6,0].map(g=>`<button type="button" data-d="${g}" aria-pressed="${pl.days.includes(g)}">${DOWS[g]}</button>`).join("")}</div>`;
+  app.innerHTML=`<section class="hero gut" style="padding-block:2rem 2.2rem"><div class="in" style="grid-template-columns:1fr"><div>
+    <a class="back" href="#">← todas as aulas</a>
+    <h1 style="font-size:clamp(1.9rem,5vw,3rem)">Sua agenda do curso</h1>
+    <p>Rotina é o que termina curso. Escolha o prazo e o curso monta a agenda diária das 100 horas, com os horários depois do seu expediente de 7h às 17h nos dias úteis e blocos maiores no fim de semana.</p></div></div></section>
+  <main class="gut body"><div class="in">
+    <h2 class="sub" style="margin-top:0">1. Em quantos meses você quer concluir?</h2>${optsHTML}
+    <div class="agm"><h2 style="font:700 1.05rem var(--f-display);margin:0">2. Seus dias e horários</h2>
+      <p>Marque os dias em que você estuda. Por padrão a sexta fica livre para descanso.</p>
+      <div class="setg"><div style="grid-column:1/-1"><label>Dias de estudo</label>${dsel}</div>
+        <div><label for="pstart">Início do plano</label><input type="date" id="pstart" value="${pl.start}"></div>
+        <div><label for="ptw">Dias úteis: início (após o trabalho)</label><input type="time" id="ptw" value="${pl.tw}"></div>
+        <div><label for="ptsat">Sábado: início</label><input type="time" id="ptsat" value="${pl.tsat}"></div>
+        <div><label for="ptsun">Domingo: início</label><input type="time" id="ptsun" value="${pl.tsun}"></div></div>
+      ${has?`<p style="margin-top:1rem"><a href="#" id="resetp" class="hint">Remover o plano</a></p>`:`<p class="hint" style="margin-top:1rem">Escolha um prazo acima para gerar a agenda.</p>`}</div>
+    ${body}</div></main>`;
+  const keep=()=>{const y=window.scrollY;agendaPage();window.scrollTo(0,y)};
+  app.querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{st.plan=Object.assign({},planOf(),{months:Number(b.dataset.m)});if(!st.plan.start)st.plan.start=isoD(new Date());save();keep();top_()}));
+  app.querySelectorAll(".dsel button").forEach(b=>b.addEventListener("click",()=>{const g=Number(b.dataset.d);const cur=planOf();let d=cur.days.includes(g)?cur.days.filter(x=>x!==g):cur.days.concat([g]);if(!d.length)return;st.plan=Object.assign({},cur,{days:d});save();keep()}));
+  [["pstart","start"],["ptw","tw"],["ptsat","tsat"],["ptsun","tsun"]].forEach(([id,k])=>{const el=document.getElementById(id);if(el)el.addEventListener("change",()=>{if(!el.value)return;st.plan=Object.assign({},planOf(),{[k]:el.value});save();keep()})});
+  app.querySelectorAll(".tk input[data-id]").forEach(cb=>cb.addEventListener("change",e=>{setDone(e.target.dataset.id,e.target.checked);keep();top_()}));
+  const rp=document.getElementById("resetp");if(rp)rp.addEventListener("click",e=>{e.preventDefault();st.plan=null;save();keep()});
+  const cb=document.getElementById("csvb");if(cb)cb.addEventListener("click",e=>{e.preventDefault();exportCsv(ag,pl)});
+}
+
 function top_(){document.getElementById("topst").textContent=pad(allDoneH())+" / "+TOTAL+" h"}
 function route(){
   const h=location.hash;let m;
   if((m=/^#aula-(\d+)$/.exec(h)))lesson(Number(m[1]));
   else if((m=/^#texto-(\d+)$/.exec(h)))textoPage(Number(m[1]));
   else if((m=/^#ficha-([a-z0-9-]+)$/.exec(h)))fichaPage(m[1]);
+  else if(h==="#agenda")agendaPage();
   else home();
   top_();window.scrollTo(0,0);
 }
