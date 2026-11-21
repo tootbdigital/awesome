@@ -71,6 +71,18 @@ details.x ol{margin:.7rem 0 .2rem;padding-left:1.2rem;color:var(--fg)}
 details.x li{margin:.35rem 0}
 details.x .hint{color:var(--muted);font-size:.85rem;margin:.5rem 0 0}
 details.x textarea{width:100%;min-height:6rem;margin-top:.6rem;font:400 .92rem/1.5 var(--f-body);color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:.6rem;resize:vertical}
+.guia{background:var(--surface);border:1px solid var(--line);border-radius:6px;margin:1.25rem 0;overflow:hidden}
+.guia>header{padding:1rem 1.1rem;border-bottom:1px solid var(--line)}
+.guia h2{font:700 1.25rem/1.2 var(--f-display);margin:0}
+.guia header p{margin:.4rem 0 0;color:var(--muted);font-size:.92rem}
+.guia details{border-top:1px solid var(--line);padding:.8rem 1.1rem}
+.guia details:first-of-type{border-top:0}
+.guia summary{cursor:pointer;font:600 .95rem var(--f-body)}
+.guia dl{margin:.8rem 0 0;display:grid;grid-template-columns:minmax(0,11rem) minmax(0,1fr);gap:.55rem 1rem}
+.guia dt{font:500 .8rem/1.4 var(--f-mono);color:var(--accent);overflow-wrap:anywhere}
+.guia dd{margin:0;font-size:.92rem}
+.guia .warn{font-size:.82rem;color:var(--muted);margin:.8rem 0 0}
+@media (max-width:560px){.guia dl{grid-template-columns:1fr;gap:.1rem}.guia dd{margin-bottom:.6rem}}
 .note{color:var(--muted);font-size:.85rem;margin-top:2rem;border-top:1px solid var(--line);padding-top:1rem}
 .note b{color:var(--fg)}
 @media (max-width:560px){
@@ -97,6 +109,66 @@ details.x textarea{width:100%;min-height:6rem;margin-top:.6rem;font:400 .92rem/1
     <p class="status" id="status"></p>
   </div>
 </header>
+<section class="guia" id="guia">
+<header><h2>Guia: o que é cada coisa</h2><p>Leitura de apoio, fora das 100 h. Explica cada módulo, cada documento e cada termo que aparece no curso. Escrevi de memória: use como mapa e confirme o texto na fonte antes de citar.</p></header>
+<details open><summary>1. Os 10 módulos e para que serve cada um</summary>
+<dl>
+<dt>M0 Orientação</dt><dd>Escolhe o pleito real que vai servir de laboratório. Todo exercício seguinte roda em cima dele.</dd>
+<dt>M1 Fundamentos</dt><dd>A base jurídica e contratual da obra: empreitada no Código Civil, tipos de preço, risco e mudança. Sem isso, o resto vira técnica sem contrato.</dd>
+<dt>M2 Contratos públicos</dt><dd>Como a Lei 14.133 e o TCU tratam alteração, reequilíbrio, BDI e extinção em obra pública.</dd>
+<dt>M3 Pleito e notificação</dt><dd>Onde a maioria dos pleitos morre: prazo de notificação perdido e falta de registro contemporâneo.</dd>
+<dt>M4 Cronograma e CPM</dt><dd>Qualidade do cronograma. Análise de atraso sobre cronograma ruim produz número ruim.</dd>
+<dt>M5 Análise de atraso</dt><dd>A RP 29R-03 da AACE: como provar quanto de atraso cada evento causou. É o núcleo técnico.</dd>
+<dt>M6 TIA e concorrência</dt><dd>Impacto de tempo prospectivo e o que fazer quando duas causas atrasam ao mesmo tempo.</dd>
+<dt>M7 Quantum</dt><dd>Transformar atraso e mudança em dinheiro: custo de atraso, BDI, perda de produtividade e valor agregado.</dd>
+<dt>M8 Dispute Boards</dt><dd>Comitês de disputas nas regras da ICC, CAM-CCBC e CBMA e na Lei 14.133. É onde o pleito pronto é decidido.</dd>
+<dt>M9 Projeto final</dt><dd>Monta tudo em um dossiê do seu caso real.</dd>
+</dl></details>
+<details><summary>2. Documentos e siglas</summary>
+<dl>
+<dt>Código Civil, arts. 610 a 626</dt><dd>Contrato de empreitada. O art. 618 trata da garantia de solidez e segurança da obra.</dd>
+<dt>Lei 14.133/2021</dt><dd>Nova lei de licitações e contratos. Alterações contratuais em arts. 124 a 136 (o art. 125 fixa limites de acréscimos e supressões), extinção a partir do art. 137 e meios alternativos de solução de controvérsias em arts. 151 a 154, que incluem o comitê de resolução de disputas.</dd>
+<dt>TCU</dt><dd>Tribunal de Contas da União. Seus acórdãos viram referência prática em obra pública. O Acórdão 2622/2013 fixa faixas de referência de BDI por tipo de obra.</dd>
+<dt>SINAPI e SICRO</dt><dd>Bases oficiais de custos de referência. SINAPI é da Caixa e do IBGE e cobre obras de edificação e saneamento. SICRO é do DNIT e cobre obras rodoviárias e de infraestrutura de transporte.</dd>
+<dt>AACE International</dt><dd>Associação de engenharia de custos e controle de projetos. Publica as Práticas Recomendadas (RP) e as certificações PSP, EVP e CCP.</dd>
+<dt>RP 24R-03, 49R-06, 38R-06, 37R-06</dt><dd>Boas práticas de cronograma: lógica das atividades, identificação do caminho crítico, documentação da base do cronograma e níveis de detalhe.</dd>
+<dt>RP 29R-03</dt><dd>Análise forense de cronograma: descreve nove métodos de análise de atraso e os fatores para escolher entre eles. Não manda usar um método; exige que a escolha seja justificada.</dd>
+<dt>RP 52R-06</dt><dd>Análise de impacto de tempo prospectiva: simula o efeito de um evento no cronograma antes de ele acabar.</dd>
+<dt>RP 25R-03</dt><dd>Estimativa de perda de produtividade da mão de obra em pleitos.</dd>
+<dt>PMI</dt><dd>Instituto de gerenciamento de projetos. Aqui entram o Practice Standard for Scheduling (como construir e manter o cronograma) e o Standard for Earned Value Management.</dd>
+<dt>Protocolo SCL</dt><dd>Documento da Society of Construction Law sobre atraso e disrupção. Não tem força de lei, a menos que o contrato o adote. Diverge da AACE em pontos como atraso concorrente.</dd>
+<dt>ICC Dispute Board Rules</dt><dd>Regras da Câmara de Comércio Internacional para comitês de disputas, em vigor desde 2015.</dd>
+<dt>CAM-CCBC e CBMA</dt><dd>Centros brasileiros de arbitragem e mediação, com regulamentos próprios para dispute boards.</dd>
+<dt>FGV</dt><dd>Aparece como curso complementar opcional (gestão de disputas em infraestrutura e MBA de construção), fora das 100 h.</dd>
+</dl></details>
+<details><summary>3. Os nove métodos da RP 29R-03</summary>
+<dl>
+<dt>Como se classificam</dt><dd>Cada método combina três eixos: observacional ou modelado, estático ou dinâmico, e aditivo ou subtrativo. Observacional compara o que aconteceu; modelado simula inserindo ou retirando atrasos.</dd>
+<dt>Observacionais estáticos</dt><dd>Comparam duas fotografias do cronograma: o planejado contra o realizado, em bloco ou por períodos. Simples e baratos; ignoram mudança de lógica entre as fotografias.</dd>
+<dt>Observacionais dinâmicos</dt><dd>Usam as atualizações do cronograma ao longo da obra, por janelas de tempo. Em geral os mais aceitos quando as atualizações são confiáveis. Dependem de dados contemporâneos.</dd>
+<dt>Modelados aditivos</dt><dd>Inserem os atrasos reclamados num cronograma-base e veem o efeito. Sensíveis à escolha do cronograma-base.</dd>
+<dt>Modelados subtrativos</dt><dd>Retiram os atrasos do cronograma real para ver quando a obra terminaria sem eles. Servem para atribuir responsabilidade, mas são contestáveis.</dd>
+<dt>Como escolher</dt><dd>A norma lista fatores como a qualidade e a disponibilidade dos dados, o tamanho do atraso, o prazo e o orçamento da análise, as exigências do contrato e a complexidade dos eventos.</dd>
+</dl>
+<p class="warn">Reconstruí a classificação de memória. Os nomes exatos e a numeração dos nove protocolos estão no sumário da RP 29R-03, que é o primeiro item do módulo 5.</p></details>
+<details><summary>4. Glossário de obra e pleito</summary>
+<dl>
+<dt>Caminho crítico</dt><dd>Sequência de atividades que define a data final. Atrasá-las atrasa a obra.</dd>
+<dt>Float total e livre</dt><dd>Folga. Total é quanto uma atividade pode atrasar sem atrasar o término da obra. Livre é quanto pode atrasar sem atrasar a sucessora.</dd>
+<dt>EOT</dt><dd>Extensão de prazo (prorrogação), com ou sem custo. Prazo e dinheiro são pedidos separados e provados separadamente.</dd>
+<dt>Reajuste, revisão e reequilíbrio</dt><dd>Reajuste aplica índice previsto no contrato, em geral a cada 12 meses. Reequilíbrio (também chamado revisão ou recomposição) recompõe o equilíbrio econômico por fato extraordinário ou alteração do contrato. Não são a mesma ferramenta.</dd>
+<dt>Pleito (claim)</dt><dd>Pedido formal de prazo, valor ou ambos, ligado a uma causa, com prova de nexo entre causa e efeito.</dd>
+<dt>Nexo causal</dt><dd>Prova de que o evento específico causou o atraso ou o custo específico.</dd>
+<dt>BDI</dt><dd>Bonificação e despesas indiretas: taxa aplicada ao custo direto para cobrir administração central, tributos, seguros, riscos e lucro.</dd>
+<dt>Custo de atraso</dt><dd>Custo de manter a obra ativa por mais tempo: administração local, canteiro, equipamentos e estrutura parada.</dd>
+<dt>Perda de produtividade</dt><dd>Mesmo trabalho exigindo mais horas que o planejado por causa de interferência. Medida pelo Measured Mile (compara trecho afetado com trecho não afetado) ou por métodos de custo total.</dd>
+<dt>TIA</dt><dd>Time Impact Analysis. Insere um evento no cronograma vigente para medir o impacto no término.</dd>
+<dt>Atraso concorrente</dt><dd>Duas ou mais causas, de partes diferentes, atrasam o término no mesmo período. O tratamento varia por contrato e por protocolo.</dd>
+<dt>Valor agregado (EVM)</dt><dd>Compara o previsto (PV), o realizado em valor (EV) e o custo real (AC). SPI = EV ÷ PV mede prazo; CPI = EV ÷ AC mede custo.</dd>
+<dt>DRB, DAB e CDB</dt><dd>Nas regras da ICC, o DRB emite recomendações que só vinculam se ninguém objetar em 30 dias; o DAB emite decisões de cumprimento imediato; o CDB combina os dois.</dd>
+<dt>Avoidance</dt><dd>Função preventiva do comitê: acompanhar a obra e resolver divergências antes de virarem disputa.</dd>
+</dl></details>
+</section>
 <div class="filters" id="filters" role="group" aria-label="Filtrar por tipo"></div>
 <main id="mods"></main>
 <p class="note"><b>Como ler os botões.</b> <b>Abrir</b> leva a uma página que apareceu em pesquisa; não consegui abrir nenhuma por dentro, então confirme a edição vigente. <b>Buscar</b> abre uma pesquisa pronta (YouTube, livros ou web), porque não assisti a vídeos nem tenho link oficial confirmado para o item. Normas completas da AACE e do PMI são pagas ou exclusivas de membros. A 29R-03 tem rascunho de revisão em andamento; confirme a versão atual. <b>Direito e jurisprudência:</b> este painel não substitui parecer jurídico. <b>FIDIC:</b> fora do currículo por decisão sua; se um contrato com financiamento multilateral ou EPC internacional chegar, estude a minuta específica dele. As questões de fixação não têm gabarito de propósito: responda de memória e confira na fonte.</p>
@@ -131,7 +203,7 @@ const MODS=[
  'Quais os limites de acréscimos e supressões e a exceção para reforma?',
  'Em que prazo e antes de qual evento o pedido de reequilíbrio deve ser feito?',
  'O que o BDI cobre e como o Acórdão 2622/2013 do TCU é usado como referência?'],r:[
- {t:'Lei 14.133/2021: alterações (arts. 124 a 136) e extinção (arts. 137 a 148)',k:'norma',h:3,s:'Planalto',l:D('https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2021/lei/l14133.htm')},
+ {t:'Lei 14.133/2021: alterações (arts. 124 a 136) e extinção (a partir do art. 137)',k:'norma',h:3,s:'Planalto',l:D('https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2021/lei/l14133.htm')},
  {t:'Lei 14.133 comentada: art. 124',k:'artigo',h:1,s:'TCE-SP',l:D('https://www.tce.sp.gov.br/legislacao-comentada/lei-14133-1o-abril-2021/124')},
  {t:'Licitações e Contratos: orientações sobre reequilíbrio (recomposição ou revisão)',k:'artigo',h:2,s:'TCU',l:D('https://licitacoesecontratos.tcu.gov.br/6-2-2-1-1-reequilibrio-economico-financeiro-recomposicao-ou-revisao-2')},
  {t:'Reequilíbrio econômico-financeiro de contratos de obras públicas',k:'pdf',h:2,s:'TCU',l:D('https://portal.tcu.gov.br/data/files/0B/05/99/3A/2516E810943E72C8E18818A8/Reequilibrio%20economico-financeiro%20de%20contratos%20de%20obras%20publicas.pdf')},
