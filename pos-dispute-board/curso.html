@@ -110,6 +110,20 @@ h2.sec{font:700 1.5rem var(--f-display);margin:2.5rem 0 1rem;letter-spacing:-.01
 .resumo textarea{width:100%;min-height:11rem;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:.8rem;resize:vertical;margin-top:.6rem;line-height:1.6}
 .resumo .cnt{font:500 .75rem var(--f-mono);color:var(--muted);margin-top:.4rem}
 .hint{font-size:.85rem;color:var(--muted)}
+.act{display:flex;flex-direction:column;gap:.45rem;align-self:center}
+.go.pdfb{background:transparent;color:var(--fg);border:2px solid var(--accent)}
+.go.pdfb:hover{background:var(--accent);color:var(--on-accent)}
+.dg{padding:1rem 0;border-top:1px solid var(--line)}
+.dg:first-of-type{border-top:0}
+.dg h3{font:700 1.05rem var(--f-display);margin:0}
+.dg .x{margin:.3rem 0 .6rem;color:var(--muted);font-size:.93rem}
+.dga{display:flex;flex-wrap:wrap;gap:.5rem .8rem;align-items:center;margin-bottom:.7rem}
+.dga label{display:flex;gap:.5rem;align-items:center;font-size:.9rem}
+.dga input{width:1.2rem;height:1.2rem;accent-color:var(--ok)}
+.fich{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:.7rem}
+.fich a{display:block;text-decoration:none;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:.8rem 1rem;font-weight:600;font-size:.94rem}
+.fich a small{display:block;font:500 .7rem var(--f-mono);color:var(--muted);margin-top:.2rem;text-transform:uppercase;letter-spacing:.08em}
+.fich a:hover{border-color:var(--accent)}
 .pn{display:flex;justify-content:space-between;gap:1rem;margin-top:2rem;flex-wrap:wrap}
 .pn a{flex:1 1 220px;display:block;text-decoration:none;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:.9rem 1.1rem}
 .pn a:hover{border-color:var(--fg)}
@@ -131,7 +145,7 @@ h2.sec{font:700 1.5rem var(--f-display);margin:2.5rem 0 1rem;letter-spacing:-.01
   .hero .in{grid-template-columns:1fr}
   .ring{width:120px;height:120px}
   .step{grid-template-columns:auto minmax(0,1fr)}
-  .step .go{grid-column:2;justify-self:start;margin-top:.5rem}
+  .step .act{grid-column:2;flex-direction:row;flex-wrap:wrap;margin-top:.5rem}
   .dr{grid-template-columns:1fr}
 }
 @media (prefers-reduced-motion:reduce){.ring .fg{transition:none}}
@@ -153,23 +167,37 @@ const r=(k,t,u,h,why,src)=>({k,t,why:why||"",h,u,pick:h?"P":"A",src:src||""});
 const AUTO={k:"autoavaliação",t:"Diagnóstico: avalie as 9 competências do curso",why:"Clique nas notas. O resultado indica em quais aulas gastar mais tempo.",h:1,u:null,pick:"",src:""};
 
 /* ========= conteúdo ========= */
+const DIAG=[
+ {k:"d1",t:"Contrato de obra no direito privado",a:2,vt:"Entenda o contrato por empreitada global",vid:"T1P9wyCGcHc",f:"empreitada-regimes",x:"Saber quem carrega o risco de quantidade e de custo em cada tipo de empreitada e o que o Código Civil diz sobre a obra."},
+ {k:"d2",t:"Lei 14.133, reequilíbrio e TCU",a:3,vt:"Reajuste, Repactuação e Reequilíbrio: Recupere o que é seu",vid:"MiRzGI8Hqbw",f:"reajuste-repactuacao-reequilibrio",x:"Distinguir reajuste, repactuação e reequilíbrio e saber em que prazo e com que documentos pedir cada um em obra pública."},
+ {k:"d3",t:"Notificação, registro e estrutura de pleito",a:4,vt:"A incidência da preclusão lógica na revisão contratual",vid:"WjDxn9cdcx0",f:"pleito-estrutura",x:"Notificar no prazo, registrar o que acontece e montar um pleito que prova a ligação entre o evento e o efeito."},
+ {k:"d4",t:"Cronograma e CPM",a:5,vt:"Folga do projeto, folga total e folga livre",vid:"l1ZdqVlwazo",f:"cpm-folgas",x:"Ler um cronograma: caminho crítico, folga total e folga livre."},
+ {k:"d5",t:"Análise de atraso e métodos da AACE 29R-03",a:6,vt:"Forensic Delay Analysis for Beginners",vid:"dpx-7LF1vvo",f:"delay-visao-geral",x:"Escolher e justificar um método de análise de atraso entre os nove da AACE 29R-03."},
+ {k:"d6",t:"Atraso concorrente e TIA",a:7,vt:"Time Impact Analysis Delay Analysis",vid:"1eq5au6l_CI",f:"tia",x:"Medir o efeito de um evento no término (TIA) e tratar atraso causado por duas partes ao mesmo tempo."},
+ {k:"d7",t:"BDI, custo de atraso e perda de produtividade",a:8,vt:"BDI de Obras: Como Calcular Segundo o TCU (Passo a Passo)",vid:"4KiXqW4KfhM",f:"bdi-tcu",x:"Formar o valor do pleito: BDI, custo de atraso e perda de produtividade."},
+ {k:"d8",t:"Valor agregado (EVM)",a:8,vt:"Aula de Gestão do Valor Agregado (VA, VP, IDC, IDP, CR)",vid:"-RyQ-Zoaocc",f:"evm",x:"Usar valor planejado, agregado e custo real, e os índices de prazo e custo, para dar sinal precoce de desvio."},
+ {k:"d9",t:"Dispute Boards e resolução de disputas",a:9,vt:"Os Dispute Boards",vid:"gVjrZ_EU-74",f:"dispute-boards",x:"Entender os comitês de disputas, seus modelos e como a lei brasileira os trata."}
+];
+const dstep=d=>({k:"vídeo",t:d.vt,why:"Competência: "+d.t+".",h:1,u:yt(d.vid),pick:"P",src:"YouTube",d:d.k,f:d.f});
 const LESSONS=[
 {n:1,t:"Orientação e diagnóstico",goal:"Entender o que você está construindo, medir de onde parte e ver como é o trabalho de quem administra contratos de obra.",
  intro:[
  "Alexis, o objetivo desta pós não é acumular horas de vídeo. É sair capaz de fazer quatro coisas com um contrato de obra na mão: ler onde está o risco, registrar o que acontece, provar quanto prazo e quanto dinheiro cada evento custou e levar isso a uma negociação ou a um comitê de disputas.",
  "A tese que organiza tudo: pleito é prova, não argumento. A maioria dos pleitos de obra perde porque a notificação saiu fora do prazo, o diário de obra não registrou o evento e o cronograma não permite medir o atraso, não porque o direito é fraco. Por isso o curso começa no contrato, passa por cronograma e custo e só então chega ao Dispute Board.",
  "O perfil que você está formando é o de administrador contratual e analista de pleitos de obra: gerente de contratos de construtora, consultor de claims, assessor de comitê de disputas e, mais adiante, candidato a membro de comitê.",
+ "O diagnóstico abaixo tem nove competências. Cada uma traz uma explicação, um vídeo curto e uma ficha em PDF da técnica. Assista, leia a ficha e só então dê a sua nota: assim a nota mede o que você sabe depois de ver o básico, e o resultado aponta onde reforçar.",
  "Como estudar cada aula: leia a explicação, assista aos vídeos principais na ordem, abra as leituras indicadas e, no fim, escreva o seu resumo do que aprendeu. O resumo é o único texto que você escreve. Ele serve para fixar e vira o seu material de revisão.",
  "Limites. O curso é técnico e de gestão, não parecer jurídico. Prazos, efeitos de decisões e jurisprudência devem ser confirmados com advogado e na fonte oficial antes de uso em um caso real."],
- steps:[AUTO,
+ steps:[
  v("X SeTEC: Gestão de contratos na construção civil","AkwMdpY5Eao",1,"Palestra em português, de construção civil, com gestão de contratos no próprio título.","YouTube · palestra"),
  v("Engenharia Legal: Contratos na Engenharia. Como construir e gerir contratos","nt9KleE36qg",1,"Segunda visão em português, de quem estrutura o contrato (projetos industriais).","YouTube · workshop"),
  v("Gestão de Contratos de Construção Civil: estratégias para maximizar eficiência","JKwNeNtJHtk",1,"Webinar com um gerente de planejamento de incorporadora; mostra a rotina de mercado.","YouTube · webinar"),
+ ...DIAG.map(dstep),
  v("Alternativa: Construction Contract Administration, guia passo a passo","qzKTvbGs3j0",0,"Para ouvir o vocabulário internacional do tema."),
  v("Alternativa: Construction Contract Management Explained in 8 Minutes","rTzdJm9-QoE",0,"Resumo curto, em inglês.")
  ],
  q:["Qual obra e qual tipo de evento (atraso, aditivo, perda de produtividade) serão seu caso de referência ao longo do curso?","O que você quer ser capaz de fazer em 10 semanas que hoje não faz?"],
- sum:"Escreva: (1) o que faz um administrador contratual de obra; (2) por que pleito é prova e não argumento; (3) quais as 3 competências em que você mais precisa evoluir, segundo o diagnóstico."},
+ sum:"Escreva: (1) o que faz um administrador contratual de obra; (2) por que pleito é prova e não argumento; (3) quais as 3 competências em que você mais precisa evoluir, segundo o diagnóstico, e o que cada uma das nove significa em uma frase."},
 
 {n:2,t:"Fundamentos da administração contratual de obras",goal:"Empreitada, tipos de preço, risco e controle de mudanças: a base sem a qual o resto vira técnica sem contrato.",
  intro:[
@@ -179,7 +207,6 @@ const LESSONS=[
  "Gestão de mudanças é o hábito que evita o pleito: toda alteração de escopo, prazo ou preço precisa de ordem formal, assinada por quem tem poder, antes ou logo depois de acontecer."],
  steps:[
  r("norma","Código Civil, arts. 610 a 626: contrato de empreitada","https://www.planalto.gov.br/ccivil_03/leis/2002/l10406compilada.htm",2,"Fonte primária. Leia os artigos inteiros.","Planalto"),
- v("Entenda o contrato por empreitada global","T1P9wyCGcHc",1,"Em português, sobre o regime de preço global."),
  v("Regimes de contratação de obra que você deve conhecer","Lu2tvLAMfxk",1,"Em português, compara regimes de contratação."),
  v("É possível usar em um contrato as empreitadas por preço global e unitário?","C4PZDvriZC0",1,"Em português, sobre misturar os dois regimes no mesmo contrato."),
  v("Como a matriz de riscos transforma contratos de obras públicas","OG5nVsVUAKs",1,"Em português, explica quem elabora a matriz e como ela afeta custo e prazo."),
@@ -202,7 +229,6 @@ const LESSONS=[
  "O erro típico do contratado em obra pública é tratar o pedido de reequilíbrio como carta comercial. Ele precisa de fato, nexo, planilha e documentos de suporte. Um dos vídeos da aula lista os documentos que acompanham o pedido."],
  steps:[
  r("norma","Lei 14.133/2021: alterações (arts. 124 a 136) e extinção (a partir do art. 137)","https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2021/lei/l14133.htm",3,"Fonte primária. Leia o capítulo de alterações inteiro.","Planalto"),
- v("Reajuste, Repactuação e Reequilíbrio: Recupere o que é seu","MiRzGI8Hqbw",1,"Trata da distinção entre as três ferramentas."),
  v("Diferença entre REAJUSTE, REPACTUAÇÃO e REVISÃO","yTm-u3kB9b4",1,"Segunda explicação da mesma distinção."),
  v("Documentos essenciais para o reequilíbrio econômico-financeiro de contratos públicos","Q0WKFe5l5JQ",1,"Lista o que acompanha o pedido."),
  v("Cejur Debate: Aditivos em contratos de obras públicas, com base na Lei 14.133/21","jjNK6mlkoJw",1,"Debate específico sobre obras públicas."),
@@ -221,11 +247,10 @@ const LESSONS=[
 {n:4,t:"Pleito, notificação e registro contemporâneo",goal:"A aula que decide pleito: notificar no prazo, registrar o que aconteceu e provar o nexo.",
  intro:[
  "Um pleito completo responde a quatro perguntas: o que aconteceu (evento), de quem é o risco (contrato), que efeito teve no prazo e no custo (nexo causal e quantificação) e o que se pede (prazo, valor ou ambos). Prazo e dinheiro são pedidos separados e se provam separados.",
- "Notificação: quase todo contrato fixa um prazo para avisar a outra parte do evento. Perder esse prazo pode custar o direito, dependendo da cláusula e do que a lei permite. Um dos vídeos da aula trata da preclusão lógica na revisão contratual, tema ligado a esse risco.",
+ "Notificação: quase todo contrato fixa um prazo para avisar a outra parte do evento. Perder esse prazo pode custar o direito, dependendo da cláusula e do que a lei permite. O vídeo sobre preclusão lógica na revisão contratual, visto na aula 1, trata de tema ligado a esse risco.",
  "Prova contemporânea é a que nasce no momento do fato: diário de obra, atas, e-mails, fotos datadas, cartas com protocolo, medições, atualizações de cronograma. Reconstruir depois é mais caro e mais fácil de contestar.",
  "Os vídeos em português específicos sobre pleito de obra foram escassos. Os melhores achados sobre claims estão em inglês e servem para fixar vocabulário, tipos de pedido e causas."],
  steps:[
- v("A incidência da preclusão lógica na revisão contratual","WjDxn9cdcx0",1,"Em português, trata do risco de perder o direito por conduta ou prazo."),
  v("What Are Construction Claims? (Civil Engineering Explained)","1PxcF_hwyu4",1,"Introdução direta, em inglês."),
  v("Construction Claim Types Explained","bYJ3eccpMRY",1,"Classifica os tipos de pedido."),
  v("How Do You Handle Construction Claims? (Civil Engineering Explained)","iHp5XjfmHD0",1,"Trata do manejo de claims."),
@@ -245,7 +270,6 @@ const LESSONS=[
  "Antes de qualquer análise, audite o cronograma: lógica aberta (atividades sem predecessora ou sucessora), restrições de data que forçam o caminho crítico, folga negativa, calendários inconsistentes e relações em excesso. Cada defeito dá ao outro lado um argumento contra a sua análise. A avaliação em 14 pontos da DCMA e o guia de avaliação de cronograma do GAO são referências usadas para isso.",
  "A AACE publica práticas recomendadas de cronograma: lógica das atividades (RP 24R-03), identificação do caminho crítico (49R-06), documentação da base do cronograma (38R-06) e níveis de detalhe (37R-06). O PMI complementa com o Practice Standard for Scheduling."],
  steps:[
- v("Folga do projeto, folga total e folga livre","l1ZdqVlwazo",1,"Em português, exemplo prático das três folgas."),
  v("Caminho crítico: a espinha dorsal do planejamento de obras","ERoXpTUBnfM",1,"Em português, aplicado a obras."),
  v("Caminho crítico: a estratégia que evita atrasos nas obras","-slyxuFpSl0",1,"Em português, aplicado a obras."),
  v("DCMA 14 Point Schedule Assessment (lista de reprodução)","PLtSOLINnSVmMsQPgM_PUh8_KPwT2RILq9",1,"Série sobre os 14 pontos de avaliação de cronograma.","YouTube · playlist"),
@@ -280,7 +304,6 @@ const LESSONS=[
  v("How To Perform As-Planned Delay Analysis on a Construction Schedule","uXUTgulUmPs",1,"Exemplo de As-Planned."),
  v("Your most-asked Forensic Schedule Analysis questions answered","XrvRQZPlRU8",1,"Perguntas e respostas sobre análise forense."),
  r("livro","Construction Delay Claims (Bramble e Callahan), capítulos de análise de atraso","https://readings.com.au/product/9781543823653/construction-delay-claims--barry-b-bramble-michael-t-callahan--2020--9781543823653",3,"Referência clássica. Página de livraria; confirme a edição.","Livraria"),
- v("Alternativa: Forensic Delay Analysis for Beginners","dpx-7LF1vvo",0,"Introdução."),
  v("Alternativa: Forensic Schedule Delay Analysis for Construction Claims","8bd7NW3mGJc",0,"Visão geral aplicada a claims."),
  r("artigo","Alternativa: crítica à revisão da 29R-03","https://enr.com/articles/56770-forensic-schedulings-groundhog-day-dubious-practices-recommended-again",0,"Mostra o debate sobre os métodos modelados.","ENR"),
  r("curso","Meta de certificação: AACE PSP, EVP e CCP","https://web.aacei.org/certification/certifications-offered/professional-certifications",0,"Certificações da AACE em planejamento, valor agregado e custos. Opcional.","AACE")
@@ -295,7 +318,6 @@ const LESSONS=[
  "No Brasil, a regra prática é ler o seu contrato: ele diz de quem é a folga, se há prorrogação sem custo para atraso concorrente e como se prova. O protocolo SCL não tem força de lei, a menos que o contrato o adote."],
  steps:[
  r("vídeo","AACE: About Recommended Practice 52R-06 (TIA)","https://pathlms.com/aace/courses/2926/video_presentations/259542",1,"Apresentação da prática na plataforma da AACE. Exige conta.","AACE · PathLMS"),
- v("Time Impact Analysis Delay Analysis","1eq5au6l_CI",1,"Explica o método."),
  v("Understanding Time Impact Analysis Method","zVzlsr4k960",1,"Segunda explicação do método."),
  v("Introduction to SCL Delay and Disruption Protocol","gYp0kpBPsBg",1,"Introdução ao protocolo."),
  v("Concurrent Delay in Construction (webinar)","F-h8hEoA2FU",1,"Trata de definição e teorias de atraso concorrente."),
@@ -321,13 +343,11 @@ const LESSONS=[
  r("pdf","Productivity Claims (artigo para advogados de construção)","https://www.agc.org/sites/default/files/users/user22628/CLE%20Paper_%20Productivity%20Claims%20.pdf",1,"Texto da AGC sobre claims de produtividade.","AGC"),
  r("norma","PMI, Standard for Earned Value Management (2020)","https://www.pmi.org/fr-fr/standards/earned-value-management",2,"Norma atual de EVM do PMI.","PMI"),
  r("pdf","Acórdão 2622/2013-TCU-Plenário: parâmetros de BDI","https://www.mpf.mp.br/o-mpf/unidades/pr-to/transparencia/licitacoes-novo/2016/12Acordao26222013BDI.pdf",1,"Leia a parte dispositiva e as tabelas de faixas.","cópia no MPF"),
- v("BDI de Obras: Como Calcular Segundo o TCU (Passo a Passo)","4KiXqW4KfhM",1,"Em português, amarra o BDI ao TCU."),
  v("Orçamento de obra pública: SINAPI, composição e BDI","2B5WhzXi8hE",1,"Em português, relaciona SINAPI, composição e BDI."),
  v("SINAPI e BDI: cuidado com os editais de licitação","ozY5L8_Zg98",1,"Em português, riscos em editais."),
  v("Measured Mile","AvwqHFbdmTQ",1,"Explica o método."),
  v("Loss of Productivity Claims in Construction","iz2CJeqXigE",1,"Visão geral dos claims de produtividade."),
  v("CLM: Earned Value vs Measured Mile to Claim Loss of Productivity","vJ4toohJNOs",1,"Compara os dois métodos."),
- v("Aula de Gestão do Valor Agregado (VA, VP, IDC, IDP, CR)","-RyQ-Zoaocc",1,"Em português, com os termos brasileiros."),
  v("Alternativa: A Administração Pública pode usar um BDI maior que o Acórdão 2622/2013?","o8pFCpXPFn0",0,"Discute o limite do BDI de referência."),
  v("Alternativa: Análise do valor agregado em projetos","RHCLt2xThA0",0,"Em português."),
  v("Alternativa: Desmistificando o BDI e sua composição no orçamento de obra","xWzqdGSHr-g",0,"Em português.")
@@ -342,7 +362,6 @@ const LESSONS=[
  "No Brasil, a Lei 14.133 prevê meios alternativos de solução de controvérsias, incluindo comitê de resolução de disputas, nos arts. 151 a 154. O regulamento de arbitragem do CBMA de 2025 trata de arbitragem, mediação e dispute board. O CAM-CCBC também tem regulamento próprio de dispute board, que não localizei como página oficial: a aula indica trabalhos acadêmicos que o analisam. O Enunciado 6 da I Jornada de Prevenção e Solução Extrajudicial de Litígios do CJF trata o comitê de resolução de disputas como método consensual de solução de conflito. A eficácia executiva da decisão é matéria em consolidação; confirme jurisprudência com advogado.",
  "Um dos vídeos da busca mencionou uma lei estadual do Rio Grande do Sul sobre o tema. Não verifiquei; confirme se existe e o número antes de citar."],
  steps:[
- v("Os Dispute Boards","gVjrZ_EU-74",1,"Em português, com o tema no título. Comece por ele."),
  v("Dispute Boards nos Contratos de Infraestrutura","3aDd9_E8xRQ",1,"Em português, foco em infraestrutura."),
  v("Dispute Boards em Licitações: como funciona na Administração Pública","GopDuBimqZg",1,"Em português, foco em contratação pública."),
  v("Meios Alternativos de Resolução de Controvérsias, Lei 14.133/21","VFzxErzEp3c",1,"Em português, sobre os arts. 151 a 154."),
@@ -390,17 +409,25 @@ const LESSONS=[
 ];
 LESSONS.forEach(L=>{L.h=L.steps.reduce((a,s)=>a+s.h,0);L.steps.forEach((s,i)=>s.id="b"+L.n+"-"+i)});
 
-const DIAG=[
- {k:"d1",t:"Contrato de obra no direito privado (empreitada, risco, mudanças)",a:2},
- {k:"d2",t:"Lei 14.133, reequilíbrio e TCU",a:3},
- {k:"d3",t:"Notificação, registro contemporâneo e estrutura de pleito",a:4},
- {k:"d4",t:"Cronograma e CPM (folga, caminho crítico, auditoria)",a:5},
- {k:"d5",t:"Análise de atraso e métodos da AACE 29R-03",a:6},
- {k:"d6",t:"Atraso concorrente e TIA",a:7},
- {k:"d7",t:"BDI, custo de atraso e perda de produtividade",a:8},
- {k:"d8",t:"Valor agregado (EVM)",a:8},
- {k:"d9",t:"Dispute Boards e resolução de disputas",a:9}
-];
+/* ========= fichas em PDF ========= */
+const FT={"adm-contratual":"Administração contratual de obras","empreitada-regimes":"Empreitada: regimes de preço e risco","matriz-risco":"Matriz de risco","gestao-mudancas":"Gestão de mudanças e ordem de mudança","aditivos-14133":"Alterações contratuais na Lei 14.133 e limites","reajuste-repactuacao-reequilibrio":"Reajuste, repactuação e reequilíbrio","pleito-estrutura":"Estrutura de um pleito","notificacao-preclusao":"Notificação e preclusão","prova-contemporanea":"Prova contemporânea","cpm-folgas":"Caminho crítico e folgas","auditoria-cronograma":"Auditoria de cronograma: DCMA 14 pontos","delay-visao-geral":"Os nove métodos da AACE 29R-03","as-planned-vs-as-built":"Planejado contra realizado (MIPs 3.1 e 3.2)","janelas":"Análise por janelas (MIPs 3.3 a 3.5)","collapsed-as-built":"Collapsed As-Built (MIPs 3.8 e 3.9)","tia":"Time Impact Analysis (TIA)","atraso-concorrente-scl":"Atraso concorrente e protocolo SCL","bdi-tcu":"BDI e Acórdão 2622/2013 do TCU","custo-atraso":"Custo de atraso","measured-mile":"Measured Mile: perda de produtividade","evm":"Valor agregado (EVM)","dispute-boards":"Dispute Boards: modelos e funcionamento","db-brasil":"Dispute Boards no Brasil","laudo-pericial":"Laudo e relatório técnico de pleito","ciclo-claim":"Ciclo de um claim de prazo e custo"};
+const DEF={1:"adm-contratual",2:"empreitada-regimes",3:"aditivos-14133",4:"pleito-estrutura",5:"cpm-folgas",6:"delay-visao-geral",7:"tia",8:"bdi-tcu",9:"dispute-boards",10:"ciclo-claim"};
+const MAP={"OG5nVsVUAKs":"matriz-risco","0-dX0v_3w_g":"matriz-risco","KfZ5FkF8Bs0":"matriz-risco","rYdj0BmT1oc":"matriz-risco","sLucikKUa58":"gestao-mudancas","pJeJhUtL_Y0":"adm-contratual",
+ "yTm-u3kB9b4":"reajuste-repactuacao-reequilibrio","Q0WKFe5l5JQ":"reajuste-repactuacao-reequilibrio","Tnc57j53Z-Q":"prova-contemporanea",
+ "PLtSOLINnSVmMsQPgM_PUh8_KPwT2RILq9":"auditoria-cronograma","-q0pw_2r1yo":"auditoria-cronograma",
+ "IL6LQrYqgds":"as-planned-vs-as-built","uXUTgulUmPs":"as-planned-vs-as-built","Q0IGnB215_U":"janelas","9f22JGeWyEc":"janelas","kZzKkB7f8-Y":"janelas","mGPd_1_PiZI":"janelas","npaJygomTl0":"collapsed-as-built",
+ "gYp0kpBPsBg":"atraso-concorrente-scl","F-h8hEoA2FU":"atraso-concorrente-scl","WqrsdOLBhyA":"atraso-concorrente-scl","fOiOiAfNJ3A":"atraso-concorrente-scl",
+ "AvwqHFbdmTQ":"measured-mile","iz2CJeqXigE":"measured-mile","vJ4toohJNOs":"measured-mile","RHCLt2xThA0":"evm",
+ "VFzxErzEp3c":"db-brasil","zhUsnzon4TA":"db-brasil","HIfNrrVqhpo":"db-brasil",
+ "LXhnrfWmmJ4":"laudo-pericial","Hv4WkDUve6c":"laudo-pericial","X5uCFeUAM1Y":"laudo-pericial","Dp-sAlOTvSw":"laudo-pericial"};
+LESSONS.forEach(L=>L.steps.forEach(s=>{
+  if(s.k==="vídeo"&&!s.f){const id=(s.u||"").includes("v=")?s.u.split("v=")[1]:"";s.f=MAP[id]||DEF[L.n]}
+}));
+const EXTRA={2:["gestao-mudancas"],3:["aditivos-14133"],4:["notificacao-preclusao","prova-contemporanea"],5:["auditoria-cronograma"],8:["custo-atraso","measured-mile"],9:["db-brasil"],10:["laudo-pericial"]};
+const fichasOf=L=>{const a=[];L.steps.forEach(s=>{if(s.f&&!a.includes(s.f))a.push(s.f)});(EXTRA[L.n]||[]).forEach(f=>{if(!a.includes(f))a.push(f)});return a};
+const SEEN={2:"o vídeo sobre contrato por empreitada global",3:"o vídeo sobre reajuste, repactuação e reequilíbrio",4:"o vídeo sobre preclusão lógica",5:"o vídeo sobre folga total e folga livre",6:"o vídeo Forensic Delay Analysis for Beginners",7:"o vídeo sobre Time Impact Analysis",8:"os vídeos sobre BDI segundo o TCU e sobre valor agregado",9:"o vídeo Os Dispute Boards"};
+
+
 
 /* ========= estado ========= */
 const KEY="pos-adm-contratual-alexis-v3";
@@ -444,7 +471,7 @@ function home(){
     <div>
       <div class="eyebrow">100 h · construção civil no Brasil</div>
       <h1>Alexis, domine <em>prazo, custo e disputa</em> em contratos de obra.</h1>
-      <p>Dez aulas, todas com vídeo. Em cada uma você lê a explicação, assiste aos vídeos na ordem, abre as leituras e escreve o seu resumo. Base: Código Civil, Lei 14.133, TCU, AACE e as regras de Dispute Boards.</p>
+      <p>Dez aulas, todas com vídeo. Em cada uma você lê a explicação, assiste aos vídeos na ordem, abre a ficha em PDF de cada técnica, faz as leituras e escreve o seu resumo. Base: Código Civil, Lei 14.133, TCU, AACE e as regras de Dispute Boards.</p>
       <a class="cta" href="#aula-${next.n}">${dn>0?"Continuar na aula "+next.n:"Começar pela aula 1"}</a>
     </div>
     <div class="ring" role="img" aria-label="${pad(dn)} de ${TOTAL} horas concluídas">
@@ -470,7 +497,7 @@ function home(){
         <div class="pb"><i style="width:${pc}%"></i></div>
         <div class="m"><span>${pad(d)} / ${L.h} h · ${nv} vídeos</span><span class="rs">${w>=30?"resumo ✓":""}</span></div></a>`}).join("")}
     </div>
-    <p class="foot"><b>Como foram escolhidos os links.</b> Todos os botões abrem uma página direta; não há pesquisas prontas. Os links foram localizados em pesquisa na web e <b>não abri nenhum por dentro</b>, nem assisti a nenhum vídeo: escolhi pelo título, idioma e aderência a construção civil e ao tema da aula. Se um vídeo for fraco ou sair do ar, use as alternativas da mesma aula. A cada vídeo, o tempo em horas é uma estimativa de estudo, não a duração real. Textos completos da AACE e livros são pagos ou exclusivos de membros: quando não há texto público, a aula leva ao sumário, a materiais da própria AACE ou a análises de terceiros, e diz isso. O texto das aulas foi escrito por mim a partir do que conheço e do que a pesquisa trouxe: confirme na fonte antes de citar. Este painel não substitui parecer jurídico. Seu progresso e seus resumos ficam salvos só neste navegador.</p>
+    <p class="foot"><b>Como foram escolhidos os links.</b> Todos os botões abrem uma página direta; não há pesquisas prontas. Os links foram localizados em pesquisa na web e <b>não abri nenhum por dentro</b>, nem assisti a nenhum vídeo: escolhi pelo título, idioma e aderência a construção civil e ao tema da aula. Se um vídeo for fraco ou sair do ar, use as alternativas da mesma aula. A cada vídeo, o tempo em horas é uma estimativa de estudo, não a duração real. Textos completos da AACE e livros são pagos ou exclusivos de membros: quando não há texto público, a aula leva ao sumário, a materiais da própria AACE ou a análises de terceiros, e diz isso. O texto das aulas foi escrito por mim a partir do que conheço e do que a pesquisa trouxe: confirme na fonte antes de citar. Este painel não substitui parecer jurídico. As fichas em PDF foram escritas por mim para este curso, a partir de conhecimento geral e dos materiais indicados; não são cópias de normas. Seu progresso e seus resumos ficam salvos só neste navegador.</p>
   </div></main>`;
   const si=document.getElementById("start"),hi=document.getElementById("hpw");
   si.addEventListener("change",()=>{if(si.value){st.start=si.value;save();home();top_()}});
@@ -480,28 +507,35 @@ function home(){
 function stepHTML(s){
   const k=s.k==="vídeo"?"v":"";
   const label=s.k==="vídeo"?"Assistir ↗":s.k==="livro"?"Ver livro ↗":"Abrir ↗";
-  const link=s.u?`<a class="go ${s.pick==="A"?"alt":""}" href="${s.u}" target="_blank" rel="noopener noreferrer">${label}</a>`:"";
+  const main=s.u?`<a class="go ${s.pick==="A"?"alt":""}" href="${s.u}" target="_blank" rel="noopener noreferrer">${label}</a>`:"";
+  const pdf=s.f?`<a class="go pdfb" href="fichas/${s.f}.pdf" target="_blank" rel="noopener noreferrer" title="${esc(FT[s.f]||"")}">PDF da técnica ↗</a>`:"";
   const pk=s.pick==="P"?`<span class="pick">Principal</span>`:s.pick==="A"?`<span class="pick alt">Alternativa</span>`:"";
   return `<li class="step ${st.done[s.id]?"done":""}">
     <input class="c" type="checkbox" id="${s.id}" ${st.done[s.id]?"checked":""} aria-label="Marcar como feito: ${esc(s.t)}">
     <div><div><span class="kind ${k}">${KL[s.k]||s.k}</span>${pk}</div>
       <div class="tt">${s.t}</div>
       ${s.why?`<p class="why">${s.why}</p>`:""}
-      <div class="mt"><span>${s.h?s.h+" h (estimativa)":"opcional, fora das 100 h"}</span>${s.src?`<span>${s.src}</span>`:""}</div>
-    </div>${link}</li>`;
+      <div class="mt"><span>${s.h?s.h+" h (estimativa)":"opcional, fora das 100 h"}</span>${s.src?`<span>${s.src}</span>`:""}${s.f?`<span>Ficha: ${FT[s.f]||s.f}</span>`:""}</div>
+    </div><div class="act">${main}${pdf}</div></li>`;
 }
 
-function diagHTML(){
+function diagHTML(L){
   const rated=DIAG.filter(d=>st.diag[d.k]);
-  let res=`<p class="hint">Dê uma nota de 1 (nunca vi) a 5 (faço sozinho) para cada competência. O resultado aparece quando as nove tiverem nota.</p>`;
+  let res=`<p class="hint">Para cada competência: assista ao vídeo, leia a ficha em PDF e dê a sua nota de 1 (nunca vi) a 5 (faço sozinho). O resultado aparece quando as nove tiverem nota.</p>`;
   if(rated.length===DIAG.length){
     const sorted=[...DIAG].sort((a,b)=>st.diag[a.k]-st.diag[b.k]);
     const low=sorted.slice(0,3);
     const avg=(DIAG.reduce((a,d)=>a+st.diag[d.k],0)/DIAG.length).toFixed(1).replace(".",",");
-    res=`<div class="res"><b>Média: ${avg} de 5.</b> Reforce primeiro: ${low.map(d=>`<a href="#aula-${d.a}">aula ${d.a}</a> (${d.t.split(" (")[0].toLowerCase()}, nota ${st.diag[d.k]})`).join("; ")}. Reserve mais tempo nelas e passe rápido pelas de nota 4 ou 5. Se a análise de atraso (aula 6) ficou abaixo de 3, não corte nada dela: é o núcleo do curso.</div>`;
+    res=`<div class="res"><b>Média: ${avg} de 5.</b> Reforce primeiro: ${low.map(d=>`<a href="#aula-${d.a}">aula ${d.a}</a> (${d.t.toLowerCase()}, nota ${st.diag[d.k]})`).join("; ")}. Reserve mais tempo nelas e passe rápido pelas de nota 4 ou 5. Se a análise de atraso (aula 6) ficou abaixo de 3, não corte nada dela: é o núcleo do curso.</div>`;
   }
   return `<div class="aula" style="margin-top:1rem"><h2>Diagnóstico das 9 competências</h2>
-  <div class="diag">${DIAG.map(d=>`<div class="dr"><span>${d.t}</span><div class="sc" role="group" aria-label="Nota para ${esc(d.t)}">${[1,2,3,4,5].map(n=>`<button type="button" data-k="${d.k}" data-v="${n}" aria-pressed="${st.diag[d.k]===n}">${n}</button>`).join("")}</div></div>`).join("")}</div>${res}</div>`;
+  ${DIAG.map((d,i)=>{const s=L.steps.find(x=>x.d===d.k);return `<div class="dg">
+    <h3>${i+1}. ${d.t}</h3><p class="x">${d.x}</p>
+    <div class="dga"><label><input class="c" type="checkbox" id="${s.id}" ${st.done[s.id]?"checked":""}> Assisti (1 h)</label>
+      <a class="go" href="${s.u}" target="_blank" rel="noopener noreferrer">Assistir: ${s.t} ↗</a>
+      <a class="go pdfb" href="fichas/${d.f}.pdf" target="_blank" rel="noopener noreferrer">PDF da técnica ↗</a></div>
+    <div class="sc" role="group" aria-label="Nota para ${esc(d.t)}">${[1,2,3,4,5].map(n=>`<button type="button" data-k="${d.k}" data-v="${n}" aria-pressed="${st.diag[d.k]===n}">${n}</button>`).join("")}</div>
+  </div>`}).join("")}${res}</div>`;
 }
 
 function lesson(n){
@@ -518,10 +552,14 @@ function lesson(n){
   </div></section>
   <main class="gut body"><div class="in">
     <div class="aula"><h2>A aula</h2>${L.intro.map(p=>`<p>${p}</p>`).join("")}</div>
-    ${n===1?diagHTML():""}
+    ${n===1?diagHTML(L):""}
     <h2 class="sub">Roteiro de estudo</h2>
     <p class="subp">Faça na ordem. Marque cada item ao terminar. Os itens "Alternativa" são opcionais.</p>
-    <ol class="steps">${L.steps.map(stepHTML).join("")}</ol>
+    ${SEEN[n]?`<p class="subp">Já visto na aula 1, por isso não repetido aqui: ${SEEN[n]}.</p>`:""}
+    <ol class="steps">${L.steps.filter(x=>!x.d).map(stepHTML).join("")}</ol>
+    <h2 class="sub">Fichas em PDF desta aula</h2>
+    <p class="subp">Cada ficha explica uma técnica da aula em uma página. Foram escritas para este curso; confirme na fonte antes de citar.</p>
+    <div class="fich">${fichasOf(L).map(f=>`<a href="fichas/${f}.pdf" target="_blank" rel="noopener noreferrer">${FT[f]||f}<small>PDF · 1 página</small></a>`).join("")}</div>
     <details class="blk"><summary>Para pensar: ${L.q.length} perguntas (sem escrever)</summary><div><ol>${L.q.map(q=>`<li>${q}</li>`).join("")}</ol><p class="hint">Responda de memória, depois confira na fonte. Sem gabarito de propósito.</p></div></details>
     <section class="resumo"><h2>${n===10?"Resumo final":"Meu resumo da aula "+L.n}</h2>
       <p class="hint">${L.sum}</p>
@@ -529,7 +567,7 @@ function lesson(n){
       <div class="cnt" id="wc"></div></section>
     <nav class="pn">${prev?`<a href="#aula-${prev.n}"><small>← anterior</small>Aula ${prev.n}: ${prev.t}</a>`:`<a href="#"><small>← início</small>Todas as aulas</a>`}${nx?`<a class="r" href="#aula-${nx.n}"><small>próxima →</small>Aula ${nx.n}: ${nx.t}</a>`:`<a class="r" href="#"><small>fim →</small>Todas as aulas</a>`}</nav>
   </div></main>`;
-  app.querySelectorAll(".step .c").forEach(cb=>cb.addEventListener("change",e=>{
+  app.querySelectorAll("input.c").forEach(cb=>cb.addEventListener("change",e=>{
     if(e.target.checked)st.done[e.target.id]=1;else delete st.done[e.target.id];
     save();const y=window.scrollY;lesson(n);top_();window.scrollTo(0,y)}));
   app.querySelectorAll(".sc button").forEach(b=>b.addEventListener("click",()=>{
