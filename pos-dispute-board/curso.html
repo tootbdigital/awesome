@@ -1,0 +1,231 @@
+<title>Pós Dispute Boards</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: painel de estudo em coluna única; cabeçalho com progresso, filtros, módulos empilhados com linhas de recurso (check | título | abrir). */
+:root{
+  --bg:#F1F4F7; --surface:#FFFFFF; --fg:#14202B; --muted:#566676; --line:#D3DBE3;
+  --accent:#B83A08; --on-accent:#FFFFFF; --ok:#1F7A4D; --chip:#E6ECF1;
+  --f-display:'Archivo','Helvetica Neue',Arial,sans-serif;
+  --f-body:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1721; --surface:#142230; --fg:#E7EDF2; --muted:#93A4B3; --line:#263747;
+    --accent:#FF8F52; --on-accent:#0D1721; --ok:#5FD39A; --chip:#1D2F40; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D1721; --surface:#142230; --fg:#E7EDF2; --muted:#93A4B3; --line:#263747;
+  --accent:#FF8F52; --on-accent:#0D1721; --ok:#5FD39A; --chip:#1D2F40; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:16px/1.55 var(--f-body);
+  padding-block:0 4rem;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:880px;margin:0 auto}
+header.top{padding-block:2rem 1.25rem}
+.eyebrow{font:500 .75rem/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font:800 clamp(1.9rem,5vw,2.8rem)/1.05 var(--f-display);margin:.6rem 0 .6rem;text-wrap:balance;letter-spacing:-.01em}
+.lede{color:var(--muted);max-width:62ch;margin:0}
+.progress{margin-top:1.4rem;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:1rem 1.1rem}
+.progress .row{display:flex;justify-content:space-between;gap:1rem;align-items:baseline;flex-wrap:wrap}
+.big{font:700 1.6rem/1 var(--f-display);font-variant-numeric:tabular-nums}
+.big small{font:500 .85rem var(--f-mono);color:var(--muted)}
+.bar{height:8px;background:var(--chip);border-radius:4px;margin-top:.7rem;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+.filters{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.25rem 0 1.5rem}
+.filters button{font:500 .8rem var(--f-mono);background:var(--chip);color:var(--fg);border:1px solid transparent;border-radius:4px;padding:.4rem .7rem;cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.mod{background:var(--surface);border:1px solid var(--line);border-radius:6px;margin-bottom:1.1rem;overflow:hidden}
+.mod>header{padding:1rem 1.1rem .85rem;border-bottom:1px solid var(--line)}
+.mod h2{font:700 1.25rem/1.2 var(--f-display);margin:0;display:flex;gap:.7rem;align-items:baseline;flex-wrap:wrap}
+.mod h2 .n{font:500 .8rem var(--f-mono);color:var(--accent)}
+.mod .meta{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-top:.4rem;font:400 .8rem var(--f-mono);color:var(--muted)}
+.mod .goal{margin:.55rem 0 0;color:var(--muted);font-size:.92rem}
+.res{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:.2rem .9rem;align-items:center;padding:.8rem 1.1rem;border-top:1px solid var(--line)}
+.res:first-of-type{border-top:0}
+.res input{width:1.15rem;height:1.15rem;accent-color:var(--accent);margin:0}
+.res .t{min-width:0}
+.res .ti{font-weight:600;overflow-wrap:anywhere}
+.res .sub{font:400 .78rem/1.4 var(--f-mono);color:var(--muted);margin-top:.15rem;display:flex;gap:.4rem .8rem;flex-wrap:wrap}
+.tag{font:500 .68rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;background:var(--chip);border-radius:3px;padding:.1rem .4rem;color:var(--fg)}
+.go{font:600 .85rem var(--f-body);text-decoration:none;background:var(--accent);color:var(--on-accent);padding:.5rem .8rem;border-radius:4px;white-space:nowrap}
+.go:hover{filter:brightness(1.08)}
+.go.alt{background:transparent;color:var(--fg);border:1px solid var(--line)}
+.go.alt:hover{border-color:var(--fg)}
+.res.done .ti{color:var(--muted);text-decoration:line-through}
+.res.done .go{opacity:.6}
+.note{color:var(--muted);font-size:.85rem;margin-top:2rem;border-top:1px solid var(--line);padding-top:1rem}
+.note b{color:var(--fg)}
+.res.hide{display:none}
+.mod.empty{display:none}
+@media (max-width:560px){
+  .res{grid-template-columns:auto minmax(0,1fr)}
+  .res .go{grid-column:2;justify-self:start;margin-top:.45rem}
+}
+@media (prefers-reduced-motion:reduce){.bar>i{transition:none}}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">100 h · autoestudo · Alex</div>
+  <h1>Pós em Dispute Boards e Análise de Pleitos</h1>
+  <p class="lede">FIDIC, ICC e DRBF no lado contratual. AACE e PMI no lado técnico de prazo e custo. Clique em Abrir, estude e marque como feito. Seu progresso fica salvo neste navegador.</p>
+  <div class="progress" aria-live="polite">
+    <div class="row"><div class="big" id="pct">0 h <small>de 100 h concluídas</small></div><div class="eyebrow" id="cnt"></div></div>
+    <div class="bar"><i id="fill"></i></div>
+  </div>
+</header>
+<div class="filters" id="filters" role="group" aria-label="Filtrar por tipo"></div>
+<main id="mods"></main>
+<p class="note"><b>Como ler os botões.</b> <b>Link direto</b> abre uma página que apareceu em pesquisa e que eu não consegui abrir por dentro: confirme a edição vigente. <b>Buscar</b> abre uma pesquisa pronta (YouTube, livros ou web), porque eu não assisti nem validei vídeos específicos nem tenho link oficial confirmado para aquele item. Normas da AACE, FIDIC e PMI completas são pagas ou exclusivas de membros: compre ou baixe pela fonte oficial. A 29R-03 tem rascunho de revisão em andamento; confirme a versão atual no site da AACE.</p>
+</div>
+
+<script>
+const YT=q=>'https://www.youtube.com/results?search_query='+encodeURIComponent(q);
+const BK=q=>'https://www.google.com/search?tbm=bks&q='+encodeURIComponent(q);
+const WB=q=>'https://www.google.com/search?q='+encodeURIComponent(q);
+// kind: video | pdf | livro | norma | artigo | exercício ; link: {u, mode:'direto'|'busca'}
+const D=(u)=>({u,mode:'direto'}), S=(u)=>({u,mode:'busca'});
+const MODS=[
+{n:0,t:'Orientação e diagnóstico',h:2,g:'Escolher o pleito real que será o laboratório do curso.',r:[
+ {t:'Listar 3 pleitos reais (anonimizados) e escolher o caso do projeto final',k:'exercício',h:2}
+]},
+{n:1,t:'Fundamentos de Dispute Boards',h:10,g:'Tipos de board, prevenção versus decisão, composição, custos e por que falham.',r:[
+ {t:'Chern on Dispute Boards (partes introdutórias e procedimento)',k:'livro',h:3,s:'Cyril Chern',l:S(BK('Chern on Dispute Boards'))},
+ {t:'Dispute Boards: Procedure and Practice',k:'livro',h:2,s:'Owen & Totterdill',l:S(BK('Dispute Boards Procedure and Practice Owen Totterdill'))},
+ {t:'DRBF: Manual do Dispute Board (acesso de membro)',k:'norma',h:1,s:'DRBF',l:D('https://drbf.memberclicks.net/dispute-board-manual')},
+ {t:'How to implement and leverage a Dispute Review Board for success',k:'artigo',h:1,s:'ABA Construction Lawyer',l:D('https://www.americanbar.org/groups/construction_industry/publications/construction-lawyer/44-3/how-to-implement-leverage-dispute-review-board-for-success/')},
+ {t:'Novo papel para profissionais de controle de projetos: Dispute Boards',k:'pdf',h:1,s:'James Zack · CMAA',l:D('https://www.cmaanet.org/sites/default/files/resource/New%20Role%20for%20Project%20Controls%20Professionals%20-%20Dispute%20Boards%20-%20v7%20-%2002-07-19%20-%20FINAL.pdf')},
+ {t:'Vídeos: dispute boards explicados',k:'video',h:1,s:'busca no YouTube',l:S(YT('dispute board DRBF webinar construction'))},
+ {t:'Exercício: 2 contratos meus em que um DB teria evitado litígio',k:'exercício',h:1}
+]},
+{n:2,t:'FIDIC 2017: Cláusulas 20 e 21 e o DAAB',h:12,g:'Claim 20.2, disputa 21.4, decisão em 84 dias, NOD, arbitragem, execução 21.7.',r:[
+ {t:'FIDIC Red Book 2017: Cl. 1.3, 1.9, 8.5, 20 e 21',k:'norma',h:4,s:'FIDIC · pago',l:S(WB('FIDIC Red Book 2017 bookshop'))},
+ {t:'The 2017 FIDIC dispute resolution procedure, Part 1',k:'artigo',h:1,s:'Fenwick Elliott',l:D('https://www.fenwickelliott.com/knowledge-hub/articles-papers/the-2017-fidic-dispute-resolution-procedure-part-1-the-new-dispute-resolution-mechanism/')},
+ {t:'A guide to dispute resolution under FIDIC',k:'artigo',h:1,s:'Gowling WLG',l:D('https://gowlingwlg.com/en/insights-resources/articles/2024/a-guide-to-dispute-resolution-under-fidic')},
+ {t:'FIDIC Red Book: enforcing DAB decisions',k:'artigo',h:1,s:'Pinsent Masons',l:D('https://www.pinsentmasons.com/out-law/guides/fidic-red-book-enforcing-dispute-adjudication-board-decisions')},
+ {t:'To DAAB or not to DAAB',k:'artigo',h:1,s:'Reed Smith',l:D('https://www.reedsmith.com/de/perspectives/2019/12/to-daab-or-not-to-daab')},
+ {t:'FIDIC RB 2017: papéis do DAAB (slides de treinamento)',k:'pdf',h:1,s:'ADB',l:D('https://events.development.asia/system/files/d1-s13-fidic-rb-2017-roles-of-daab_dinesh.pdf')},
+ {t:'FIDIC Practice Note on Dispute Avoidance (nov/2023)',k:'norma',h:1,s:'FIDIC',l:S(WB('FIDIC Practice Note Dispute Avoidance 2023 standing dispute board'))},
+ {t:'Vídeos: FIDIC 2017 DAAB e notice de claim',k:'video',h:1,s:'busca no YouTube',l:S(YT('FIDIC 2017 DAAB webinar clause 20 claims'))},
+ {t:'Exercício: fluxograma 20→21 com prazos; onde um claim meu perderia o direito',k:'exercício',h:1}
+]},
+{n:3,t:'Regras institucionais e Brasil',h:10,g:'ICC, CAM-CCBC, CBMA, Lei 14.133 e a eficácia da decisão do comitê.',r:[
+ {t:'ICC Dispute Board Rules 2015 (apêndices de 2018)',k:'pdf',h:2,s:'ICC',l:D('https://iccwbo.org/wp-content/uploads/sites/3/2015/09/icc-dispute-board-rules-english-version.pdf')},
+ {t:'Regulamento de Dispute Boards: CAM-CCBC e CBMA',k:'norma',h:2,s:'busca na web',l:S(WB('regulamento dispute board CAM-CCBC CBMA comitê de prevenção e solução de disputas'))},
+ {t:'Lei 14.133/2021, arts. 151 a 154',k:'norma',h:1,s:'Planalto',l:D('https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2021/lei/l14133.htm')},
+ {t:'Enunciados do CJF sobre Dispute Boards',k:'norma',h:1,s:'busca na web',l:S(WB('enunciados CJF Jornada Prevenção e Solução Extrajudicial de Litígios dispute board'))},
+ {t:'Jurisprudência sobre eficácia e execução de decisão de DB',k:'artigo',h:2,s:'busca na web',l:S(WB('decisão dispute board STJ TJSP executividade cumprimento'))},
+ {t:'Vídeos: dispute board no Brasil',k:'video',h:1,s:'busca no YouTube',l:S(YT('dispute board Brasil comitê de resolução de disputas CBMA CCBC'))},
+ {t:'Exercício: tabela FIDIC × ICC × CAM-CCBC (nomeação, prazo, efeito, custo)',k:'exercício',h:1}
+]},
+{n:4,t:'Cronograma e CPM: base comum',h:8,g:'Qualidade do cronograma, lógica, caminho crítico e float.',r:[
+ {t:'Practice Standard for Scheduling, 3ª ed. (confirmar alinhamento ao PMBOK 6 ou 7)',k:'norma',h:3,s:'PMI',l:D('https://www.pmi.org/pt-br/standards/scheduling-third-edition')},
+ {t:'AACE RP 24R-03, 49R-06, 38R-06 e 37R-06 (lógica, caminho crítico, base, níveis)',k:'norma',h:2,s:'AACE',l:S(WB('AACE International recommended practice 49R-06 identifying the critical path'))},
+ {t:'Understanding construction scheduling',k:'artigo',h:1,s:'ABA',l:D('https://www.americanbar.org/groups/tort_trial_insurance_practice/resources/journal/2022-fall/understanding-construction-scheduling')},
+ {t:'Vídeos: CPM, float total e livre',k:'video',h:1,s:'busca no YouTube',l:S(YT('CPM scheduling fundamentals total float free float'))},
+ {t:'Exercício: auditar um cronograma real (lógica aberta, restrições, float negativo, calendários)',k:'exercício',h:1}
+]},
+{n:5,t:'Análise forense de atraso: AACE RP 29R-03',h:18,g:'Os nove métodos, os fatores de seleção e a aplicação a um caso real. Núcleo técnico do curso.',r:[
+ {t:'Sumário da RP 29R-03 (estrutura dos nove métodos)',k:'pdf',h:1,s:'AACE',l:D('https://web.aacei.org/docs/default-source/toc/toc_29r-03.pdf?sfvrsn=4')},
+ {t:'RP 29R-03 completa (membro ou compra no site da AACE)',k:'norma',h:5,s:'AACE · pago',l:S(WB('AACE 29R-03 Forensic Schedule Analysis recommended practice purchase'))},
+ {t:'Schedule analysis methods: resumo da 29R-03',k:'pdf',h:1,s:'SlideShare',l:D('https://www.slideshare.net/slideshow/schedule-analysis-methods-aace-29r03-recommendedpdf/264419973')},
+ {t:'Webinar AACE sobre análise forense (plataforma PathLMS)',k:'video',h:1,s:'AACE · exige conta',l:D('https://www.pathlms.com/aace/courses/50359/webinars/35185')},
+ {t:'Segundo webinar AACE (PathLMS)',k:'video',h:1,s:'AACE · exige conta',l:D('https://pathlms.com/aace/courses/50359/webinars/33861')},
+ {t:'Forensic scheduling: crítica à revisão da 29R-03',k:'artigo',h:1,s:'ENR',l:D('https://enr.com/articles/56770-forensic-schedulings-groundhog-day-dubious-practices-recommended-again')},
+ {t:'Construction Delay Claims (capítulos de métodos)',k:'livro',h:4,s:'Bramble & Callahan',l:S(BK('Construction Delay Claims Bramble Callahan'))},
+ {t:'Exercício: aplicar 2 métodos ao mesmo evento e justificar a escolha em 1 página',k:'exercício',h:4}
+]},
+{n:6,t:'TIA prospectivo, concorrência e protocolo SCL',h:8,g:'Impacto de tempo prospectivo, atraso concorrente e o confronto SCL × AACE.',r:[
+ {t:'AACE RP 52R-06: Prospective Time Impact Analysis',k:'norma',h:2,s:'AACE',l:S(WB('AACE 52R-06 prospective time impact analysis'))},
+ {t:'SCL Delay and Disruption Protocol, 2ª ed. (2017)',k:'norma',h:2,s:'SCL',l:S(WB('SCL Delay and Disruption Protocol second edition 2017 scl.org.uk'))},
+ {t:'The SCL Delay and Disruption Protocol: a second edition',k:'artigo',h:1,s:'Fenwick Elliott',l:D('https://www.fenwickelliott.com/research-insight/annual-review/2017/scl-delay-disruption-protocol-second-edition')},
+ {t:'Harmonizing SCL DDP2 and AACE 29R-03',k:'artigo',h:1,s:'Mondaq',l:D('https://www.mondaq.com/unitedstates/arbitration-dispute-resolution/1702390/harmonizing-scl-dd2-and-aace-29r-03-complementary-frameworks-for-forensic-delay-analysis-in-international-arbitration')},
+ {t:'Delay and Disruption in Construction Contracts (concorrência)',k:'livro',h:1,s:'Pickavance',l:S(BK('Delay and Disruption in Construction Contracts Pickavance'))},
+ {t:'Exercício: parecer de 2 páginas sobre atraso concorrente num caso meu',k:'exercício',h:1}
+]},
+{n:7,t:'Quantum: produtividade, custos e EVM',h:12,g:'Separar custo de atraso e de perda de produtividade, com método defensável.',r:[
+ {t:'AACE RP 25R-03: estimativa de perda de produtividade em claims',k:'norma',h:3,s:'AACE',l:S(WB('AACE 25R-03 estimating lost labor productivity in construction claims'))},
+ {t:'Standard for Earned Value Management (2020)',k:'norma',h:3,s:'PMI',l:D('https://www.pmi.org/fr-fr/standards/earned-value-management')},
+ {t:'Measured Mile, Modified Total Cost e Total Cost',k:'artigo',h:2,s:'busca na web',l:S(WB('measured mile method modified total cost lost productivity construction claims'))},
+ {t:'Vídeos: perda de produtividade e EVM',k:'video',h:1,s:'busca no YouTube',l:S(YT('measured mile lost productivity construction claim earned value management'))},
+ {t:'Exercício: Measured Mile num pacote de trabalho, com limitações',k:'exercício',h:3}
+]},
+{n:8,t:'Prática do DB: audiência, decisão, execução',h:8,g:'Do position paper à decisão fundamentada e ao cumprimento.',r:[
+ {t:'Casos e boletim de resolução de disputas da ICC',k:'artigo',h:2,s:'busca na web',l:S(WB('ICC Dispute Resolution Bulletin dispute board case commentary'))},
+ {t:'Dispute Resolution Board: procedimentos operacionais sugeridos',k:'pdf',h:1,s:'Caltrans',l:D('https://dot.ca.gov/-/media/dot-media/programs/construction/documents/dispute-resolution/drb-dra-suggestoperatingprocedures.pdf')},
+ {t:'Programa de Dispute Review Board do departamento de transportes da Flórida',k:'artigo',h:1,s:'FDOT',l:D('https://www.fdot.gov/construction/CONSTADM/DRB/DRBMain.shtm')},
+ {t:'Código de ética e declaração de independência de membros',k:'norma',h:1,s:'busca na web',l:S(WB('DRBF code of ethics dispute board member disclosure independence'))},
+ {t:'Vídeos: simulação de audiência de dispute board',k:'video',h:1,s:'busca no YouTube',l:S(YT('mock dispute board hearing simulation'))},
+ {t:'Exercício: position paper de 5 páginas e decisão de 3 páginas (caso fictício)',k:'exercício',h:2}
+]},
+{n:9,t:'Projeto final',h:12,g:'Dossiê de um pleito real anonimizado. Critério: um sênior reproduz seus números só com o dossiê.',r:[
+ {t:'Matriz contratual de notices e prazos',k:'exercício',h:2},
+ {t:'Análise de atraso por dois métodos',k:'exercício',h:3},
+ {t:'Quantum: custo de atraso e produtividade',k:'exercício',h:3},
+ {t:'Minuta de manifestação ao DB',k:'exercício',h:2},
+ {t:'Decisão-espelho',k:'exercício',h:1},
+ {t:'Lições para prevenir a disputa (avoidance)',k:'exercício',h:1}
+]}
+];
+
+const KEY='pos-db-alex-v1';
+let done={};
+try{done=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){done={}}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(done))}catch(e){}};
+const KINDS=['todos','video','pdf','livro','norma','artigo','exercício'];
+const LABEL={todos:'Todos',video:'Vídeo',pdf:'PDF',livro:'Livro',norma:'Norma',artigo:'Artigo','exercício':'Exercício'};
+let filter='todos';
+const root=document.getElementById('mods');
+
+MODS.forEach(m=>m.r.forEach((r,i)=>r.id='m'+m.n+'-'+i));
+
+function render(){
+  root.innerHTML='';
+  MODS.forEach(m=>{
+    const sec=document.createElement('section');sec.className='mod';sec.id='mod'+m.n;
+    const dh=m.r.filter(r=>done[r.id]).reduce((a,r)=>a+r.h,0);
+    sec.innerHTML=`<header><h2><span class="n">M${m.n}</span>${m.t}</h2>
+      <div class="meta"><span>${m.h} h</span><span id="mp${m.n}">${dh} / ${m.h} h</span></div>
+      <p class="goal">${m.g}</p></header>`;
+    let shown=0;
+    m.r.forEach(r=>{
+      const row=document.createElement('div');
+      row.className='res'+(done[r.id]?' done':'')+((filter!=='todos'&&r.k!==filter)?' hide':'');
+      if(!row.classList.contains('hide'))shown++;
+      const cb=`<input type="checkbox" id="${r.id}" ${done[r.id]?'checked':''} aria-label="Marcar como feito: ${r.t.replace(/"/g,'&quot;')}">`;
+      let link='';
+      if(r.l){
+        const direct=r.l.mode==='direto';
+        link=`<a class="go ${direct?'':'alt'}" href="${r.l.u}" target="_blank" rel="noopener noreferrer">${direct?'Abrir ↗':'Buscar ↗'}</a>`;
+      }
+      row.innerHTML=`${cb}<div class="t"><div class="ti">${r.t}</div>
+        <div class="sub"><span class="tag">${LABEL[r.k]}</span><span>${r.h} h</span>${r.s?`<span>${r.s}</span>`:''}${r.l?`<span>${r.l.mode==='direto'?'link direto':'busca pronta'}</span>`:''}</div></div>${link}`;
+      row.querySelector('input').addEventListener('change',e=>{
+        if(e.target.checked)done[r.id]=1;else delete done[r.id];
+        save();render();
+      });
+      sec.appendChild(row);
+    });
+    if(!shown)sec.classList.add('empty');
+    root.appendChild(sec);
+  });
+  const all=MODS.flatMap(m=>m.r);
+  const total=all.reduce((a,r)=>a+r.h,0);
+  const dn=all.filter(r=>done[r.id]).reduce((a,r)=>a+r.h,0);
+  document.getElementById('pct').innerHTML=`${dn} h <small>de ${total} h concluídas</small>`;
+  document.getElementById('fill').style.width=(dn/total*100)+'%';
+  document.getElementById('cnt').textContent=all.filter(r=>done[r.id]).length+' de '+all.length+' itens';
+}
+const fb=document.getElementById('filters');
+KINDS.forEach(k=>{
+  const b=document.createElement('button');b.type='button';b.textContent=LABEL[k];
+  b.setAttribute('aria-pressed',k===filter);
+  b.addEventListener('click',()=>{filter=k;[...fb.children].forEach(c=>c.setAttribute('aria-pressed',c===b));render()});
+  fb.appendChild(b);
+});
+render();
+</script>
